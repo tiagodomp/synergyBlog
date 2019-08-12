@@ -18,7 +18,9 @@
 		"source": "https://github.com/cakephp/cakephp"
 	},
 	"require": {
-		"php": ">=5.3.0"
+		"php": ">=5.3.0",
+		"cakephp/debug_kit": "^2.2.0",
+		"cakephp/migrations": "@stable"
 	},
 	"suggest": {
 		"ext-openssl": "You need to install ext-openssl or ext-mcrypt to use AES-256 encryption",
