@@ -1,46 +1,51 @@
-# Migrations plugin for CakePHP
+CakeDC Migrations Plugin
+========================
 
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
-[![Build Status](https://img.shields.io/travis/cakephp/migrations/master.svg?style=flat-square)](https://travis-ci.org/cakephp/migrations)
-[![Coverage Status](https://img.shields.io/codecov/c/github/cakephp/migrations/master.svg?style=flat-square)](https://codecov.io/github/cakephp/migrations?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/migrations.svg?style=flat-square)](https://packagist.org/packages/cakephp/migrations)
+[![Bake Status](https://secure.travis-ci.org/CakeDC/migrations.png?branch=master)](http://travis-ci.org/CakeDC/migrations)
+[![Downloads](https://poser.pugx.org/CakeDC/migrations/d/total.png)](https://packagist.org/packages/CakeDC/migrations)
+[![Latest Version](https://poser.pugx.org/CakeDC/migrations/v/stable.png)](https://packagist.org/packages/CakeDC/migrations)
 
-This is a Database Migrations system for CakePHP 3.
+The **Migrations** plugin enables developers to quickly and easily manage and migrate between database schema versions.
 
-The plugin consists of a CakePHP shell wrapper for the [phinx](http://phinx.org) migrations library.
+As an application is developed, changes to the database may be required, and managing that in teams can get extremely difficult. The **Migrations** plugin enables you to share and coordinate database changes in an iterative manner, removing the complexity of handling these changes.
 
-## Installation
+* **Console:** The console script allows you to run migrations up and down.
+* **Installation:** Migrations can also be run programmatically via an installer script.
+* **ORM:** The **Migrations** plugin makes use of the *CakePHP* ORM and supports all databases provided by the framework.
 
-You can install this plugin into your CakePHP application using [composer](http://getcomposer.org).
+This is NOT a Backup Tool
+-------------------------
 
-Run the following command
-```sh
-composer require cakephp/migrations
- ```
+We highly recommend to not run the **Migrations** plugin in a production environment directly *without* doing a backup first.
 
-## Configuration
+However, you can make use of the ```before()``` and ```after()``` callbacks in the migration files to add logic which triggers a backup script.
 
-You can load the plugin using the shell command:
+Requirements
+------------
 
-```
-bin/cake plugin load Migrations
-```
+* CakePHP 2.5+ (We recomment latest 2.x)
+* PHP 5.3.0+ (We recommend php 7+)
 
-Or you can manually add the loading statement in the **src/Application.php** file of your application:
-```php
-public function bootstrap()
-{
-    parent::bootstrap();
-    $this->addPlugin('Migrations');
-}
-```
-Prior to 3.6.0
-```php
-Plugin::load('Migrations');
-```
+Documentation
+-------------
 
-Additionally, you will need to configure the ``default`` database configuration in your **config/app.php** file.
+For documentation, as well as tutorials, see the [Docs](Docs/Home.md) directory of this repository.
 
-## Documentation
+Support
+-------
 
-Full documentation of the plugin can be found on the [CakePHP Cookbook](http://book.cakephp.org/3.0/en/migrations.html).
+For bugs and feature requests, please use the [issues](https://github.com/CakeDC/migrations/issues) section of this repository.
+
+Commercial support is also available, [contact us](http://cakedc.com/contact) for more information.
+
+Contributing
+------------
+
+This repository follows the [CakeDC Plugin Standard](http://cakedc.com/plugin-standard). If you'd like to contribute new features, enhancements or bug fixes to the plugin, please read our [Contribution Guidelines](http://cakedc.com/contribution-guidelines) for detailed instructions.
+
+License
+-------
+
+Copyright 2007-2014 Cake Development Corporation (CakeDC). All rights reserved.
+
+Licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) License. Redistributions of the source code included in this repository must retain the copyright notice found in each file.

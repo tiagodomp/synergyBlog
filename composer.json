@@ -20,7 +20,8 @@
 	"require": {
 		"php": ">=5.3.0",
 		"cakephp/debug_kit": "^2.2.0",
-		"cakephp/migrations": "@stable"
+		"cakephp/migrations": "@stable",
+		"cakedc/migrations": "^2.5"
 	},
 	"suggest": {
 		"ext-openssl": "You need to install ext-openssl or ext-mcrypt to use AES-256 encryption",

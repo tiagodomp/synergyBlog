@@ -31,4 +31,25 @@ App::uses('Controller', 'Controller');
  * @link		https://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+
+	public $components = array(
+		'DebugKit.Toolbar',
+		'Session',
+		'Auth' => array(
+			'loginRedirect' => array('controller' => 'users', 'action' => 'index'),
+			'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
+			'authError' => 'Faça login novamente para acessar essa Página',
+			'loginError' => 'Username ou senha estão incorretos'
+		)
+	);
+
+	public function beforeFilter() {
+		$this->Auth->allow('login');
+	}
+
+	public function isAuthorized($user) {
+		// inserir verificação de role
+
+		return true;
+	}
 }

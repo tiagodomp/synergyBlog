@@ -63,8 +63,9 @@ Cache::config('default', array('engine' => 'File'));
  * Uncomment one of the lines below, as you need. Make sure you read the documentation on CakePlugin to use more
  * advanced ways of loading plugins
  */
-	//CakePlugin::load('DebugKit'); // Loads a single plugin named DebugKit
-CakePlugin::loadAll(); // Loads all plugins at once
+	// CakePlugin::load('DebugKit', array('bootstrap' => true, 'routes' => true)); // Loads a single plugin named DebugKit
+	//CakePlugin::path('Plugin/Migrations'); // Loads a single plugin named DebugKit
+	CakePlugin::loadAll(); // Loads all plugins at once
 
 /**
  * To prefer app translation over plugin translation, you can set

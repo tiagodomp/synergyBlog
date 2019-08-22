@@ -226,8 +226,19 @@
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
  */
+	// Configure::write('Session', array(
+	// 	'defaults' => 'php'
+	// ));
+
 	Configure::write('Session', array(
-		'defaults' => 'php'
+		'defaults' => 'cache',
+		'timeout' => 100,
+		'start' => true,
+		'checkAgent' => false,
+		'handler' => array(
+			'config' => 'session'
+		),
+		'server' => 'redis',
 	));
 
 /**
@@ -361,7 +372,7 @@
  *       Please check the comments in bootstrap.php for more info on the cache engines available
  *       and their settings.
  */
-$engine = 'File';
+$engine = 'Redis';
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
@@ -381,7 +392,9 @@ Cache::config('_cake_core_', array(
 	'prefix' => $prefix . 'cake_core_',
 	'path' => CACHE . 'persistent' . DS,
 	'serialize' => ($engine === 'File'),
-	'duration' => $duration
+	'duration' => $duration,
+	'server' => 'redis',
+	'port'	=> 6379,
 ));
 
 /**
@@ -393,5 +406,25 @@ Cache::config('_cake_model_', array(
 	'prefix' => $prefix . 'cake_model_',
 	'path' => CACHE . 'models' . DS,
 	'serialize' => ($engine === 'File'),
-	'duration' => $duration
+	'duration' => $duration,
+	'server' => 'redis',
+	'port'	=> 6379,
+));
+
+Cache::config('session', array(
+	'engine' => $engine,
+	'prefix' => $prefix . 'cake_session_',
+	'duration' => $duration,
+	'serialize' => true,
+	'server' => 'redis',
+	'port'	=> 6379,
+));
+
+Cache::config('default', array(
+	'engine' => $engine,
+	'prefix' => $prefix . 'cake_',
+	'duration' => $duration,
+	'serialize' => true,
+	'server' => 'redis',
+	'port'	=> 6379,
 ));

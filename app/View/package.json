@@ -1,0 +1,29 @@
+{
+  "name": "frontend-blog-cakephp2",
+  "version": "1.0.0",
+  "description": "atualizar o frontend em realtime via Redis e socket.io em comunicação com o server em cakephp 2.10",
+  "author": "Tiago Pereira <tiago.pereira@samplemed.com.br>",
+  "license": "MIT",
+  "main": "Server/index.js",
+  "keywords": [
+    "nodejs",
+    "cakephp2.x",
+    "redis"
+  ],
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.16.4",
+    "expressjs": "^1.0.1",
+    "ioredis": "^4.14.0",
+    "mysql": "^2.17.1",
+    "redis": "^2.8.0",
+    "socket.io": "^2.2.0",
+    "socket.io-redis": "^5.2.0"
+  },
+  "scripts": {
+    "start": "node Server/index.js"
+  },
+  "engines": {
+    "node": "4.1.1"
+  }
+}
