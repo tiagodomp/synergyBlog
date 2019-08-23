@@ -88,4 +88,32 @@ class PostsController extends AppController
 			'_serialize' => array('message')
 		));
 	}
+
+	public function getPost(){
+		$data = array(
+			"posts" => array(
+				0 => array(
+					'stamp' => '',
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'title'	=> '',
+					'description' => '',
+					'author' => array(
+						'name'	=> '',
+						'uuid'	=> '',
+						'img'	=> '',
+						'description'	=> '',
+					),
+					'likes'	=> 0,
+					'comments'	=> array(
+						'count' => 0,
+					),
+					'created'	=> '',
+					'modified'	=> '',
+				),
+			),
+		);
+	}
 }

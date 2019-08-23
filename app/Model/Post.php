@@ -5,6 +5,7 @@
 use App\Model\Traits\CrudJsonTrait;
 
 App::uses('AppModel', 'Model');
+App::uses('CakeEvent', 'core');
 // App::uses('CrudJsonTrait', 'Model/Traits');
 
 class Post extends AppModel {

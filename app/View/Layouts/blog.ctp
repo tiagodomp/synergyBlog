@@ -3,8 +3,9 @@
 
 echo $this->Html->docType('html5');
 ?>
-<html lang="pt-BR">
+<html lang="pt-BR" ng-app="blog">
 <head>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
 	<title><?php echo $this->fetch('title');?></title>
 
 
@@ -27,7 +28,7 @@ echo $this->Html->docType('html5');
 	<!-- Font -->
 	<link href="https://fonts.googleapis.com/css?family=Encode+Sans+Expanded:400,600,700" rel="stylesheet">
 </head>
-<body>
+<body ng-controller="BlogController">
 
 	<header>
 		<div class="bg-191">
@@ -39,10 +40,11 @@ echo $this->Html->docType('html5');
 												'Logar',
 												array(
 													'controller' => 'users',
-													'action' => 'login',
+													'action' => 'loginModal',
 												),
 												array('class'	=>  "pl-0 pl-sm-10"),
-											); ?>
+											);
+							?>
 						</li>
 							<!-- <a class="pl-0 pl-sm-10" href="#">Logar</a></li> -->
 						<li><?php echo $this->Html->link(
@@ -133,55 +135,57 @@ echo $this->Html->docType('html5');
 	</header>
 
 
-	<div class="container">
+	<div class="container" ng-controller="PostsController">
 		<div class="h-600x h-sm-auto">
+			<!-- bloco superior -->
 			<div class="h-2-3 h-sm-auto oflow-hidden">
-
+				<!-- 1 Post GG -->
 				<div class="pb-5 pr-5 pr-sm-0 float-left float-sm-none w-2-3 w-sm-100 h-100 h-sm-300x">
-					<a class="pos-relative h-100 dplay-block" href="#">
+					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][0]['stamp']), true)?>">
 
-						<div class="img-bg bg-1 bg-grad-layer-6"></div>
+						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['posts'][0]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
 
 						<div class="abs-blr color-white p-20 bg-sm-color-7">
-							<h3 class="mb-15 mb-sm-5 font-sm-13"><b>Peter Thiels VC Found Invests Million into Bitcoin, Market Reacts</b></h3>
+							<h3 class="mb-15 mb-sm-5 font-sm-13"><b><?PHP echo $data['posts'][0]['title']; ?></b></h3>
 							<ul class="list-li-mr-20">
-								<li>by <span class="color-primary"><b>Olivia Capzallo</b></span> Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>30</li>
+								<li>Criado por <span class="color-primary"><b><?PHP echo $data['posts'][0]['author']['name']; ?></b></span> {{post.0.created}}<?PHP echo $data['post'][0]['created']; ?></li>
+								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][0]['likes']; ?></li>
+								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][0]['comments']['count']; ?></li>
 							</ul>
 						</div><!--abs-blr -->
 					</a><!-- pos-relative -->
 				</div><!-- w-1-3 -->
 
+				<!-- 2 Post PP -->
 				<div class="float-left float-sm-none w-1-3 w-sm-100 h-100 h-sm-600x">
 
 					<div class="pl-5 pb-5 pl-sm-0 ptb-sm-5 pos-relative h-50">
-						<a class="pos-relative h-100 dplay-block" href="#">
+						<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][1]['stamp']), true)?>">
 
-							<div class="img-bg bg-2 bg-grad-layer-6"></div>
+							<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][1]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
 
 							<div class="abs-blr color-white p-20 bg-sm-color-7">
-								<h4 class="mb-10 mb-sm-5"><b>Russians Bisiops Condems Cryptocurrecy</b></h4>
+								<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][1]['title']; ?></b></h4>
 								<ul class="list-li-mr-20">
-									<li>Jan 25, 2018</li>
-									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>30</li>
+									<li><?PHP echo $data['post'][1]['created']; ?></li>
+									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][1]['likes'];?></li>
+									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][1]['comments']['count'];?></li>
 								</ul>
 							</div><!--abs-blr -->
 						</a><!-- pos-relative -->
 					</div><!-- w-1-3 -->
 
 					<div class="pl-5 ptb-5 pl-sm-0 pos-relative h-50">
-						<a class="pos-relative h-100 dplay-block" href="#">
+						<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][2]['stamp']), true)?>">
 
-							<div class="img-bg bg-3 bg-grad-layer-6"></div>
+							<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][2]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
 
 							<div class="abs-blr color-white p-20 bg-sm-color-7">
-								<h4 class="mb-10 mb-sm-5"><b>Bitcoin Adoption by Business in 2017</b></h4>
+								<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][2]['title']; ?></b></h4>
 								<ul class="list-li-mr-20">
-									<li>Jan 25, 2018</li>
-									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>30</li>
+									<li><?PHP echo $data['post'][2]['created']; ?></li>
+									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][2]['likes'];?></li>
+									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][2]['comments']['count'];?></li>
 								</ul>
 							</div><!--abs-blr -->
 						</a><!-- pos-relative -->
@@ -191,52 +195,53 @@ echo $this->Html->docType('html5');
 
 			</div><!-- h-2-3 -->
 
+			<!-- Bloco inferior -->
 			<div class="h-1-3 oflow-hidden">
 
 				<div class="pr-5 pr-sm-0 pt-5 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
-					<a class="pos-relative h-100 dplay-block" href="#">
+					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][3]['stamp']), true)?>">
 
-						<div class="img-bg bg-4 bg-grad-layer-6"></div>
+						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][3]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
 
 						<div class="abs-blr color-white p-20 bg-sm-color-7">
-							<h4 class="mb-10 mb-sm-5"><b>2017 Market Performance: Crypto vs.Stock</b></h4>
-							<ul class="list-li-mr-20">
-								<li>Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>30</li>
-							</ul>
+							<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][3]['title']; ?></b></h4>
+								<ul class="list-li-mr-20">
+									<li><?PHP echo $data['post'][3]['created']; ?></li>
+									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][3]['likes'];?></li>
+									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][3]['comments']['count'];?></li>
+								</ul>
 						</div><!--abs-blr -->
 					</a><!-- pos-relative -->
 				</div><!-- w-1-3 -->
 
 				<div class="plr-5 plr-sm-0 pt-5 pt-sm-10 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
-					<a class="pos-relative h-100 dplay-block" href="#">
+					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][4]['stamp']), true)?>">
 
-						<div class="img-bg bg-5 bg-grad-layer-6"></div>
+						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][4]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
 
 						<div class="abs-blr color-white p-20 bg-sm-color-7">
-							<h4 class="mb-10 mb-sm-5"><b>Culture Stock: Bitcoin a Part of all Walks of life in 2017</b></h4>
-							<ul class="list-li-mr-20">
-								<li>Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>30</li>
-							</ul>
+							<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][4]['title']; ?></b></h4>
+								<ul class="list-li-mr-20">
+									<li><?PHP echo $data['post'][4]['created']; ?></li>
+									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][4]['likes'];?></li>
+									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][4]['comments']['count'];?></li>
+								</ul>
 						</div><!--abs-blr -->
 					</a><!-- pos-relative -->
 				</div><!-- w-1-3 -->
 
 				<div class="pl-5 pl-sm-0 pt-5 pt-sm-10 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
-					<a class="pos-relative h-100 dplay-block" href="#">
+					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][5]['stamp']), true)?>">
 
-						<div class="img-bg bg-6 bg-grad-layer-6"></div>
+						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][5]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
 
 						<div class="abs-blr color-white p-20 bg-sm-color-7">
-							<h4 class="mb-10 mb-sm-5"><b>Bitcoin Billionares Hidding in Plain Sight</b></h4>
-							<ul class="list-li-mr-20">
-								<li>Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>30</li>
-							</ul>
+						<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][5]['title']; ?></b></h4>
+								<ul class="list-li-mr-20">
+									<li><?PHP echo $data['post'][5]['created']; ?></li>
+									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][5]['likes'];?></li>
+									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][5]['comments']['count'];?></li>
+								</ul>
 						</div><!--abs-blr -->
 					</a><!-- pos-relative -->
 				</div><!-- w-1-3 -->
@@ -255,50 +260,37 @@ echo $this->Html->docType('html5');
 					<div class="row">
 
 						<div class="col-sm-6">
-							<img src="images/recent-news-1-600x450.jpg" alt="">
-							<h4 class="pt-20"><a href="#"><b>2017 Market Performance: <br/>Crypto vs.Stock</b></a></h4>
+							<img src="<?PHP echo $data['posts'][6]['img']['path'];?>" alt="<?PHP echo $data['posts'][6]['img']['alt'];?>">
+							<h4 class="pt-20"><a href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][6]['stamp']), true)?>"><?PHP echo $data['posts'][6]['title']; ?></a></h4>
 							<ul class="list-li-mr-20 pt-10 pb-20">
-								<li class="color-lite-black">by <a href="#" class="color-black"><b>Olivia Capzallo,</b></a>
-								Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><b>30,190</b></li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><b>47</b></li>
+								<li class="color-lite-black">Criado por
+									<a href="<?PHP echo $this->Html->url(array("controller" => "profiles", "action" => "view", $data['posts'][6]['author']['uuid']), true)?>" class="color-black">
+										<b><?PHP echo $data['posts'][6]['author']['name'];?></b>
+									</a>
+									<?PHP echo $data['post'][6]['created']; ?>
+								</li>
+								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><b><?PHP echo $data['posts'][6]['likes'];?></b></li>
+								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><b><?PHP echo $data['posts'][6]['comments']['count'];?></b></li>
 							</ul>
-							<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-								doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore.</p>
+							<p><?PHP echo $data['posts'][6]['description'];?></p>
 						</div><!-- col-sm-6 -->
 
 						<div class="col-sm-6">
-							<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
-								<div class="wh-100x abs-tlr"><img src="images/polular-1-100x100.jpg" alt=""></div>
-								<div class="ml-120 min-h-100x">
-									<h5><b>Bitcoin Billionares Hidding in Plain Sight</b></h5>
-									<h6 class="color-lite-black pt-10">by <span class="color-black"><b>Danile Palmer,</b></span> Jan 25, 2018</h6>
-								</div>
-							</a><!-- oflow-hidden -->
-
-							<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
-								<div class="wh-100x abs-tlr"><img src="images/polular-2-100x100.jpg" alt=""></div>
-								<div class="ml-120 min-h-100x">
-									<h5><b>Bitcoin Billionares Hidding in Plain Sight</b></h5>
-									<h6 class="color-lite-black pt-10">by <span class="color-black"><b>Danile Palmer,</b></span> Jan 25, 2018</h6>
-								</div>
-							</a><!-- oflow-hidden -->
-
-							<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
-								<div class="wh-100x abs-tlr"><img src="images/polular-3-100x100.jpg" alt=""></div>
-								<div class="ml-120 min-h-100x">
-									<h5><b>Bitcoin Billionares Hidding in Plain Sight</b></h5>
-									<h6 class="color-lite-black pt-10">by <span class="color-black"><b>Danile Palmer,</b></span> Jan 25, 2018</h6>
-								</div>
-							</a><!-- oflow-hidden -->
-
-							<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
-								<div class="wh-100x abs-tlr"><img src="images/polular-4-100x100.jpg" alt=""></div>
-								<div class="ml-120 min-h-100x">
-									<h5><b>Bitcoin Billionares Hidding in Plain Sight</b></h5>
-									<h6 class="color-lite-black pt-10">by <span class="color-black"><b>Danile Palmer,</b></span> Jan 25, 2018</h6>
-								</div>
-							</a><!-- oflow-hidden -->
+							<?PHP foreach($data['posts'] as $key => $post): ?>
+								<?php if($key > 6): ?>
+									<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
+										<div class="wh-100x abs-tlr"><img src="<?PHP echo $post['img']['path']; ?>" alt="<?PHP echo $post['img']['alt']; ?>"></div>
+										<div class="ml-120 min-h-100x">
+											<h5><b><?PHP echo $post['title']; ?></b></h5>
+											<h6 class="color-lite-black pt-10">Criado por <span class="color-black"><b><?PHP echo $post['author']['name']; ?></b></span> <?PHP echo $post['created']; ?></h6>
+										</div>
+									</a><!-- oflow-hidden -->
+								<?php endif;
+									if($key >= 10){
+										break;
+									}
+								?>
+							<?PHP endforeach; ?>
 						</div><!-- col-sm-6 -->
 
 					</div><!-- row -->

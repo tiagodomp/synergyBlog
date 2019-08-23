@@ -38,7 +38,7 @@ mysql.connect(function(err) {
 
 //Recebe do cakephp2.x através do Pub/Sub Redis e envia para o front via socket.io
 redis.on('message', function(channel, message) {
-    if (channel == 'notificacao') {
+    if (channel == 'notificacoes') {
         var data = JSON.parse(message);
 		// gerar lógica para enviar via socket.io-client para a view
 		io.on('connection', (socket) => {
@@ -68,4 +68,4 @@ redis.on('message', function(channel, message) {
 	}
 });
 
-redis.subscribe('notificacao', 'processos');
+redis.subscribe('notificacoes', 'processos');
