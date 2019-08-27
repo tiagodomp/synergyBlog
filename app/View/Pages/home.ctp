@@ -1,230 +1,117 @@
-<?php
-/**
- * @link          https://cakephp.org CakePHP(tm) Project
- * @package       app.View.Pages
- * @since         CakePHP(tm) v 0.10.0.1076
- */
 
-if (!Configure::read('debug')):
-	throw new NotFoundException();
-endif;
 
-App::uses('Debugger', 'Utility');
-?>
-<h2><?php echo __d('cake_dev', 'Release Notes for CakePHP %s.', Configure::version()); ?></h2>
-<p>
-	<?php echo $this->Html->link(__d('cake_dev', 'Read the changelog'), 'https://cakephp.org/changelogs/' . Configure::version()); ?>
-</p>
-<?php
-if (Configure::read('debug') > 0):
-	Debugger::checkSecurityKeys();
-endif;
-?>
-<?php if (file_exists(WWW_ROOT . 'css' . DS . 'cake.generic.css')): ?>
-	<p id="url-rewriting-warning" style="background-color:#e32; color:#fff;">
-		<?php echo __d('cake_dev', 'URL rewriting is not properly configured on your server.'); ?>
-		1) <a target="_blank" href="https://book.cakephp.org/2.0/en/installation/url-rewriting.html" style="color:#fff;">Help me configure it</a>
-		2) <a target="_blank" href="https://book.cakephp.org/2.0/en/development/configuration.html#cakephp-core-configuration" style="color:#fff;">I don't / can't use URL rewriting</a>
-	</p>
-<?php endif; ?>
-<p>
-<?php
-if (version_compare(PHP_VERSION, '5.2.8', '>=')):
-	echo '<span class="notice success">';
-		echo __d('cake_dev', 'Your version of PHP is 5.2.8 or higher.');
-	echo '</span>';
-else:
-	echo '<span class="notice">';
-		echo __d('cake_dev', 'Your version of PHP is too low. You need PHP 5.2.8 or higher to use CakePHP.');
-	echo '</span>';
-endif;
-?>
-</p>
-<p>
-	<?php
-	if (is_writable(TMP)):
-		echo '<span class="notice success">';
-			echo __d('cake_dev', 'Your tmp directory is writable.');
-		echo '</span>';
-	else:
-		echo '<span class="notice">';
-			echo __d('cake_dev', 'Your tmp directory is NOT writable.');
-		echo '</span>';
-	endif;
-	?>
-</p>
-<p>
-	<?php
-	$settings = Cache::settings();
-	if (!empty($settings)):
-		echo '<span class="notice success">';
-			echo __d('cake_dev', 'The %s is being used for core caching. To change the config edit %s', '<em>' . $settings['engine'] . 'Engine</em>', CONFIG . 'core.php');
-		echo '</span>';
-	else:
-		echo '<span class="notice">';
-			echo __d('cake_dev', 'Your cache is NOT working. Please check the settings in %s', CONFIG . 'core.php');
-		echo '</span>';
-	endif;
-	?>
-</p>
-<p>
-	<?php
-	$filePresent = null;
-	if (file_exists(CONFIG . 'database.php')):
-		echo '<span class="notice success">';
-			echo __d('cake_dev', 'Your database configuration file is present.');
-			$filePresent = true;
-		echo '</span>';
-	else:
-		echo '<span class="notice">';
-			echo __d('cake_dev', 'Your database configuration file is NOT present.');
-			echo '<br/>';
-			echo __d('cake_dev', 'Rename %s to %s', CONFIG . 'database.php.default', CONFIG . 'database.php');
-		echo '</span>';
-	endif;
-	?>
-</p>
-<?php
-if (isset($filePresent)):
-	App::uses('ConnectionManager', 'Model');
-	try {
-		$connected = ConnectionManager::getDataSource('default');
-	} catch (Exception $connectionError) {
-		$connected = false;
-		$errorMsg = $connectionError->getMessage();
-		if (method_exists($connectionError, 'getAttributes')):
-			$attributes = $connectionError->getAttributes();
-			if (isset($attributes['message'])):
-				$errorMsg .= '<br />' . $attributes['message'];
-			endif;
-		endif;
-	}
-	?>
-	<p>
-		<?php
-			if ($connected && $connected->isConnected()):
-				echo '<span class="notice success">';
-					echo __d('cake_dev', 'CakePHP is able to connect to the database.');
-				echo '</span>';
-			else:
-				echo '<span class="notice">';
-					echo __d('cake_dev', 'CakePHP is NOT able to connect to the database.');
-					echo '<br /><br />';
-					echo $errorMsg;
-				echo '</span>';
-			endif;
-		?>
-	</p>
-<?php
-endif;
 
-App::uses('Validation', 'Utility');
-if (!Validation::alphaNumeric('cakephp')):
-	echo '<p><span class="notice">';
-		echo __d('cake_dev', 'PCRE has not been compiled with Unicode support.');
-		echo '<br/>';
-		echo __d('cake_dev', 'Recompile PCRE with Unicode support by adding <code>--enable-unicode-properties</code> when configuring');
-	echo '</span></p>';
-endif;
-?>
+<div class="container" ng-controller="PostsController">
+	<div class="h-600x h-sm-auto">
+		<!-- bloco superior -->
+		<div class="h-2-3 h-sm-auto oflow-hidden">
+			<!-- 1 Post GG -->
+			<div class="pb-5 pr-5 pr-sm-0 float-left float-sm-none w-2-3 w-sm-100 h-100 h-sm-300x">
+				<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "view", $data['posts'][0]['stamp']), true)?>">
 
-<p>
-	<?php
-	if (CakePlugin::loaded('DebugKit')):
-		echo '<span class="notice success">';
-			echo __d('cake_dev', 'DebugKit plugin is present');
-		echo '</span>';
-	else:
-		echo '<span class="notice">';
-			echo __d('cake_dev', 'DebugKit is not installed. It will help you inspect and debug different aspects of your application.');
-			echo '<br/>';
-			echo __d('cake_dev', 'You can install it from %s', $this->Html->link('GitHub', 'https://github.com/cakephp/debug_kit/tree/2.2'));
-		echo '</span>';
-	endif;
-	?>
-</p>
+					<div class="img-bg bg-grad-layer-6" style="background: url('<?PHP echo $data['posts'][0]['img']['path'] ?>') no-repeat center; background-size: cover;"></div>
 
-<h3><?php echo __d('cake_dev', 'Editing this Page'); ?></h3>
-<p>
-<?php
-echo __d('cake_dev', 'To change the content of this page, edit: %s.<br />
-To change its layout, edit: %s.<br />
-You can also add some CSS styles for your pages at: %s.',
-	'APP/View/Pages/home.ctp', 'APP/View/Layouts/default.ctp', 'APP/webroot/css');
-?>
-</p>
+					<div class="abs-blr color-white p-20 bg-sm-color-7">
+						<h3 class="mb-15 mb-sm-5 font-sm-13"><b><?PHP echo $data['posts'][0]['title']; ?></b></h3>
+						<ul class="list-li-mr-20">
+							<li>Criado por <span class="color-primary"><b><?PHP echo $data['posts'][0]['author']['name']; ?></b></span><?PHP echo $data['post'][0]['created']; ?></li>
+							<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][0]['likes']; ?></li>
+							<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][0]['comments']['count']; ?></li>
+						</ul>
+					</div><!--abs-blr -->
+				</a><!-- pos-relative -->
+			</div><!-- w-1-3 -->
 
-<h3><?php echo __d('cake_dev', 'Getting Started'); ?></h3>
-<p>
-	<?php
-	echo $this->Html->link(
-		sprintf('<strong>%s</strong> %s', __d('cake_dev', 'New'), __d('cake_dev', 'CakePHP 2.0 Docs')),
-		'https://book.cakephp.org/2.0/en/',
-		array('target' => '_blank', 'escape' => false)
-	);
-	?>
-</p>
-<p>
-	<?php
-	echo $this->Html->link(
-		__d('cake_dev', 'The 15 min Blog Tutorial'),
-		'https://book.cakephp.org/2.0/en/tutorials-and-examples/blog/blog.html',
-		array('target' => '_blank', 'escape' => false)
-	);
-	?>
-</p>
+			<!-- 2 Post PP -->
+			<div class="float-left float-sm-none w-1-3 w-sm-100 h-100 h-sm-600x">
 
-<h3><?php echo __d('cake_dev', 'Official Plugins'); ?></h3>
-<p>
-<ul>
-	<li>
-		<?php echo $this->Html->link('DebugKit', 'https://github.com/cakephp/debug_kit/tree/2.2') ?>:
-		<?php echo __d('cake_dev', 'provides a debugging toolbar and enhanced debugging tools for CakePHP applications.'); ?>
-	</li>
-	<li>
-		<?php echo $this->Html->link('Localized', 'https://github.com/cakephp/localized') ?>:
-		<?php echo __d('cake_dev', 'contains various localized validation classes and translations for specific countries'); ?>
-	</li>
-</ul>
-</p>
+				<div class="pl-5 pb-5 pl-sm-0 ptb-sm-5 pos-relative h-50">
+					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "view", $data['posts'][1]['stamp']), true)?>">
 
-<h3><?php echo __d('cake_dev', 'More about CakePHP'); ?></h3>
-<p>
-<?php echo __d('cake_dev', 'CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record, Association Data Mapping, Front Controller and MVC.'); ?>
-</p>
-<p>
-<?php echo __d('cake_dev', 'Our primary goal is to provide a structured framework that enables PHP users at all levels to rapidly develop robust web applications, without any loss to flexibility.'); ?>
-</p>
+						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][1]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
 
-<ul>
-	<li><a href="https://cakephp.org">CakePHP</a>
-	<ul><li><?php echo __d('cake_dev', 'The Rapid Development Framework'); ?></li></ul></li>
-	<li><a href="https://book.cakephp.org"><?php echo __d('cake_dev', 'CakePHP Documentation'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Your Rapid Development Cookbook'); ?></li></ul></li>
-	<li><a href="https://api.cakephp.org"><?php echo __d('cake_dev', 'CakePHP API'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Quick API Reference'); ?></li></ul></li>
-	<li><a href="https://bakery.cakephp.org"><?php echo __d('cake_dev', 'The Bakery'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Everything CakePHP'); ?></li></ul></li>
-	<li><a href="https://plugins.cakephp.org"><?php echo __d('cake_dev', 'CakePHP Plugins'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'A comprehensive list of all CakePHP plugins created by the community'); ?></li></ul></li>
-	<li><a href="https://community.cakephp.org"><?php echo __d('cake_dev', 'CakePHP Community Center'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Everything related to the CakePHP community in one place'); ?></li></ul></li>
-	<li><a href="http://discourse.cakephp.org/">CakePHP Official Forum </a>
-	<ul><li>CakePHP discussion forum</li></ul></li>
-	<li><a href="http://discourse.cakephp.org/"><?php echo __d('cake_dev', 'CakePHP Official Forum'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'CakePHP discussion forum'); ?></li></ul></li>
-	<li><a href="irc://irc.freenode.net/cakephp">irc.freenode.net #cakephp</a>
-	<ul><li><?php echo __d('cake_dev', 'Live chat about CakePHP'); ?></li></ul></li>
-	<li><a href="https://github.com/cakephp/"><?php echo __d('cake_dev', 'CakePHP Code'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Find the CakePHP code on GitHub and contribute to the framework'); ?></li></ul></li>
-	<li><a href="https://github.com/cakephp/cakephp/issues"><?php echo __d('cake_dev', 'CakePHP Issues'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'CakePHP Issues'); ?></li></ul></li>
-	<li><a href="https://github.com/cakephp/cakephp/wiki#roadmaps"><?php echo __d('cake_dev', 'CakePHP Roadmaps'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'CakePHP Roadmaps'); ?></li></ul></li>
-	<li><a href="https://training.cakephp.org"><?php echo __d('cake_dev', 'Training'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Join a live session and get skilled with the framework'); ?></li></ul></li>
-	<li><a href="https://cakefest.org"><?php echo __d('cake_dev', 'CakeFest'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Don\'t miss our annual CakePHP conference'); ?></li></ul></li>
-	<li><a href="https://cakefoundation.org"><?php echo __d('cake_dev', 'Cake Software Foundation'); ?> </a>
-	<ul><li><?php echo __d('cake_dev', 'Promoting development related to CakePHP'); ?></li></ul></li>
-</ul>
+						<div class="abs-blr color-white p-20 bg-sm-color-7">
+							<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][1]['title']; ?></b></h4>
+							<ul class="list-li-mr-20">
+								<li><?PHP echo $data['post'][1]['created']; ?></li>
+								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][1]['likes'];?></li>
+								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][1]['comments']['count'];?></li>
+							</ul>
+						</div><!--abs-blr -->
+					</a><!-- pos-relative -->
+				</div><!-- w-1-3 -->
+
+				<div class="pl-5 ptb-5 pl-sm-0 pos-relative h-50">
+					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "view", $data['posts'][2]['stamp']), true)?>">
+
+						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][2]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
+
+						<div class="abs-blr color-white p-20 bg-sm-color-7">
+							<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][2]['title']; ?></b></h4>
+							<ul class="list-li-mr-20">
+								<li><?PHP echo $data['post'][2]['created']; ?></li>
+								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][2]['likes'];?></li>
+								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][2]['comments']['count'];?></li>
+							</ul>
+						</div><!--abs-blr -->
+					</a><!-- pos-relative -->
+				</div><!-- w-1-3 -->
+
+			</div><!-- float-left -->
+
+		</div><!-- h-2-3 -->
+
+		<!-- Bloco inferior -->
+		<div class="h-1-3 oflow-hidden">
+
+			<div class="pr-5 pr-sm-0 pt-5 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
+				<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "view", $data['posts'][3]['stamp']), true)?>">
+
+					<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][3]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
+
+					<div class="abs-blr color-white p-20 bg-sm-color-7">
+						<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][3]['title']; ?></b></h4>
+							<ul class="list-li-mr-20">
+								<li><?PHP echo $data['post'][3]['created']; ?></li>
+								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][3]['likes'];?></li>
+								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][3]['comments']['count'];?></li>
+							</ul>
+					</div><!--abs-blr -->
+				</a><!-- pos-relative -->
+			</div><!-- w-1-3 -->
+
+			<div class="plr-5 plr-sm-0 pt-5 pt-sm-10 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
+				<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "view", $data['posts'][4]['stamp']), true)?>">
+
+					<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][4]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
+
+					<div class="abs-blr color-white p-20 bg-sm-color-7">
+						<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][4]['title']; ?></b></h4>
+							<ul class="list-li-mr-20">
+								<li><?PHP echo $data['post'][4]['created']; ?></li>
+								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][4]['likes'];?></li>
+								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][4]['comments']['count'];?></li>
+							</ul>
+					</div><!--abs-blr -->
+				</a><!-- pos-relative -->
+			</div><!-- w-1-3 -->
+
+			<div class="pl-5 pl-sm-0 pt-5 pt-sm-10 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
+				<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "view", $data['posts'][5]['stamp']), true)?>">
+
+					<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][5]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
+
+					<div class="abs-blr color-white p-20 bg-sm-color-7">
+					<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][5]['title']; ?></b></h4>
+							<ul class="list-li-mr-20">
+								<li><?PHP echo $data['post'][5]['created']; ?></li>
+								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][5]['likes'];?></li>
+								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][5]['comments']['count'];?></li>
+							</ul>
+					</div><!--abs-blr -->
+				</a><!-- pos-relative -->
+			</div><!-- w-1-3 -->
+
+		</div><!-- h-2-3 -->
+	</div><!-- h-100vh -->
+</div><!-- container -->

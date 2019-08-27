@@ -373,6 +373,7 @@
  *       and their settings.
  */
 $engine = 'Redis';
+$server = 'redis';
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
@@ -393,8 +394,8 @@ Cache::config('_cake_core_', array(
 	'path' => CACHE . 'persistent' . DS,
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration,
-	'server' => 'redis',
-	'port'	=> 6379,
+	'server' => $server,
+	//'port'	=> 6379,
 ));
 
 /**
@@ -407,8 +408,8 @@ Cache::config('_cake_model_', array(
 	'path' => CACHE . 'models' . DS,
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration,
-	'server' => 'redis',
-	'port'	=> 6379,
+	'server' => $server,
+	//'port'	=> 6379,
 ));
 
 Cache::config('session', array(
@@ -416,8 +417,8 @@ Cache::config('session', array(
 	'prefix' => $prefix . 'cake_session_',
 	'duration' => $duration,
 	'serialize' => true,
-	'server' => 'redis',
-	'port'	=> 6379,
+	'server' => $server,
+	//'port'	=> 6379,
 ));
 
 Cache::config('default', array(
@@ -425,6 +426,6 @@ Cache::config('default', array(
 	'prefix' => $prefix . 'cake_',
 	'duration' => $duration,
 	'serialize' => true,
-	'server' => 'redis',
-	'port'	=> 6379,
+	'server' => $server,
+	//'port'	=> 6379,
 ));

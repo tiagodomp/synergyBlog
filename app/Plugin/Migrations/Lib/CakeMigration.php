@@ -10,12 +10,11 @@
  */
 
 App::uses('CakeSchema', 'Model');
-App::uses('CakeObject', 'Core'); //não esqueça dessa linha
 
 /**
  * Base Class for Migration management
  */
-class CakeMigration extends CakeObject { //renomear de Object para CakeObject
+class CakeMigration extends CakeObject {
 
 /**
  * Migration description

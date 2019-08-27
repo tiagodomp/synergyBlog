@@ -1,9 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('AuthComponent', 'Core');
+App::uses('AuthComponent', 'Core'); // esta em todas
 App::uses('CakeEvent', 'Event');
-App::uses('Router', 'Core');
-App::uses('CrudJsonTrait', './Traits');
+App::uses('Router', 'Core'); // esta em todas
 
 
 /**
@@ -12,17 +11,16 @@ App::uses('CrudJsonTrait', './Traits');
  */
 class User extends AppModel {
 
-	use CrudJsonTrait;
 
 	public $name = 'User';
 	public $primaryKey = 'uuid';
 	public $displayField = 'username';
 	public $hasOne = array(
         'Profile' => array(
-            'className' => 'Profile',
+            'className'  => 'Profile',
 			'conditions' => array('Profile.deleted' => null),
 			'foreignKey' => 'users_uuid',
-            'dependent' => true
+            'dependent'  => true
         )
     );
 

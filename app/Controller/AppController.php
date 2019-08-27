@@ -20,6 +20,7 @@
  */
 
 App::uses('Controller', 'Controller');
+App::uses('JsHelper', 'Controller');
 
 /**
  * Application Controller
@@ -42,6 +43,8 @@ class AppController extends Controller {
 			'loginError' => 'Username ou senha estão incorretos'
 		)
 	);
+
+	public $helpers = array('Js' => array('Jquery'));
 
 	public function beforeFilter() {
 		$this->Auth->allow('login');

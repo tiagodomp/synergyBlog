@@ -24,7 +24,54 @@ class Post extends AppModel {
 		)
 	);
 
+	public $actsAs = array(
+        'Upload.Upload' => array(
+            'photo' => array(
+                'fields' => array(
+                    'dir' => 'photo_dir'
+                )
+            )
+        )
+	);
+
 	public $virtualFields = array();
+
+	public function buildBody(){
+		$stamp = gmdate('\TYmdHis');
+		$body = array(
+			$stamp => array(
+				'img' => array(
+					'path'  => '',		//string
+					'alt'	=> '',		//string
+					'type'	=> '',		//MIMEType
+					'size'	=> '',		//int -> kb
+				),
+				'title'	=> '',			//string - 128
+				'description' => '',	//string - 256
+				'likes'	=> 0,			//int
+				'comments'	=> array(
+					'count' => 0,		//int
+					'msg'	=> array(
+
+					)
+				),
+				'body'		=> array(
+					'type'	=> '',		//MIMEType
+					'data'	=> ''		//string
+				),
+				'created'	=> '',		//datetime
+				'modified'	=> '',		//datetime
+			)
+		);
+	}
+
+	public function buildInfo(){
+
+	}
+
+	public function buildGamification(){
+
+	}
 
 	/**
 	 * Após criar a tabela post significa que o usuario foi devidamente cadastrado e isso emitira uma notificação via REDIS

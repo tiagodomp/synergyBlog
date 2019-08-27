@@ -18,7 +18,7 @@ echo $this->Html->docType('html5');
 		echo $this->Html->meta('icon');
 
 		echo $this->Html->css('bootstrap');
-		echo $this->Html->css('style');
+		echo $this->Html->css('styles');
 		echo $this->Html->css('fonts/ionicons');
 
 		echo $this->fetch('meta');
@@ -42,7 +42,7 @@ echo $this->Html->docType('html5');
 													'controller' => 'users',
 													'action' => 'loginModal',
 												),
-												array('class'	=>  "pl-0 pl-sm-10"),
+												array('class'=>  "pl-0 pl-sm-10")
 											);
 							?>
 						</li>
@@ -65,11 +65,11 @@ echo $this->Html->docType('html5');
 						</li>
 					</ul>
 					<ul class="float-right float-sm-none list-a-plr-10 list-a-plr-sm-5 list-a-ptb-15 list-a-ptb-sm-5">
-						<li><a class="pl-0 pl-sm-10" href="#"><i class="ion-social-facebook"></i></a></li>
-						<li><a href="#"><i class="ion-social-twitter"></i></a></li>
-						<li><a href="#"><i class="ion-social-google"></i></a></li>
-						<li><a href="#"><i class="ion-social-instagram"></i></a></li>
-						<li><a href="#"><i class="ion-social-bitcoin"></i></a></li>
+						<li><a class="pl-0 pl-sm-10" href="https://www.facebook.com/" target="_blank"><i class="ion-social-facebook"></i></a></li>
+						<li><a href="https://twitter.com/" target="_blank"><i class="ion-social-twitter"></i></a></li>
+						<li><a href="https://google.com.br/" target="_blank"><i class="ion-social-google"></i></a></li>
+						<li><a href="https://www.instagram.com/?hl=pt-br" target="_blank"><i class="ion-social-instagram"></i></a></li>
+						<li><a href="https://www.mercadobitcoin.com.br/" target="_blank"><i class="ion-social-bitcoin"></i></a></li>
 					</ul>
 
 				</div><!-- top-menu -->
@@ -83,8 +83,8 @@ echo $this->Html->docType('html5');
 										array(
 											'alt' 		=> 'Logo do blog',
 											'border' 	=> '0',
-											'url'		=> array('controller' => 'pages', 'action' => 'index' )
-											),
+											'url'		=> array('controller' => 'Pages', 'action' => 'home' )
+											)
 										);
 			?>
 			<!-- <a class="logo" href="index.html"><img src="images/logo-black.png" alt="Logo"></a> -->
@@ -106,150 +106,35 @@ echo $this->Html->docType('html5');
 				<li>
 					<?php
 					echo $this->Html->link(
-						'Notícias', array( 'controller' => 'Posts', 'action' => 'noticias'));
+						'NOTÍCIAS', array( 'controller' => 'Posts', 'action' => 'news'));
 					?>
 				</li>
 				<li class="drop-down">
 				<a href="<?php
 					echo $this->Html->url(array('controller' => 'Posts', 'action' => 'analise'));?>
-					">Análise técnica<i class="ion-arrow-down-b"></i></a>
+					">ANÁLISE TÉCNICA<i class="ion-arrow-down-b"></i></a>
 					<ul class="drop-down-menu drop-down-inner">
 						<li><?php
 							echo $this->Html->link(
-								'Em Destaque', array( 'controller' => 'Posts', 'action' => 'noticias', 'destaque'));
+								'Em Destaque', array( 'controller' => 'Posts', 'action' => 'news', 'destaque'));
 							?>
 						</li>
 						<li><?php
 							echo $this->Html->link(
-								'Pelo Editor', array( 'controller' => 'Posts', 'action' => 'noticias', 'editores'));
+								'Pelo Editor', array( 'controller' => 'Posts', 'action' => 'news', 'editores'));
 							?>
 						</li>
 					</ul>
 				</li>
-				<li><a href="04_FAQS.html">EVENTS</a></li>
-				<li><a href="05_FAQS-single.html">EXPLAINED</a></li>
-				<li><a href="06_contact-us.html">ICON CLAENDER</a></li>
+				<li><a href="04_FAQS.html">TIMELINE</a></li>
+				<li><a href="05_FAQS-single.html">INVESTIMENTOS</a></li>
+				<li><a href="06_contact-us.html">SEGUROS</a></li>
 			</ul>
 			<div class="clearfix"></div>
 		</div><!-- container -->
 	</header>
 
-
-	<div class="container" ng-controller="PostsController">
-		<div class="h-600x h-sm-auto">
-			<!-- bloco superior -->
-			<div class="h-2-3 h-sm-auto oflow-hidden">
-				<!-- 1 Post GG -->
-				<div class="pb-5 pr-5 pr-sm-0 float-left float-sm-none w-2-3 w-sm-100 h-100 h-sm-300x">
-					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][0]['stamp']), true)?>">
-
-						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['posts'][0]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
-
-						<div class="abs-blr color-white p-20 bg-sm-color-7">
-							<h3 class="mb-15 mb-sm-5 font-sm-13"><b><?PHP echo $data['posts'][0]['title']; ?></b></h3>
-							<ul class="list-li-mr-20">
-								<li>Criado por <span class="color-primary"><b><?PHP echo $data['posts'][0]['author']['name']; ?></b></span> {{post.0.created}}<?PHP echo $data['post'][0]['created']; ?></li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][0]['likes']; ?></li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][0]['comments']['count']; ?></li>
-							</ul>
-						</div><!--abs-blr -->
-					</a><!-- pos-relative -->
-				</div><!-- w-1-3 -->
-
-				<!-- 2 Post PP -->
-				<div class="float-left float-sm-none w-1-3 w-sm-100 h-100 h-sm-600x">
-
-					<div class="pl-5 pb-5 pl-sm-0 ptb-sm-5 pos-relative h-50">
-						<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][1]['stamp']), true)?>">
-
-							<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][1]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
-
-							<div class="abs-blr color-white p-20 bg-sm-color-7">
-								<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][1]['title']; ?></b></h4>
-								<ul class="list-li-mr-20">
-									<li><?PHP echo $data['post'][1]['created']; ?></li>
-									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][1]['likes'];?></li>
-									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][1]['comments']['count'];?></li>
-								</ul>
-							</div><!--abs-blr -->
-						</a><!-- pos-relative -->
-					</div><!-- w-1-3 -->
-
-					<div class="pl-5 ptb-5 pl-sm-0 pos-relative h-50">
-						<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][2]['stamp']), true)?>">
-
-							<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][2]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
-
-							<div class="abs-blr color-white p-20 bg-sm-color-7">
-								<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][2]['title']; ?></b></h4>
-								<ul class="list-li-mr-20">
-									<li><?PHP echo $data['post'][2]['created']; ?></li>
-									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][2]['likes'];?></li>
-									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][2]['comments']['count'];?></li>
-								</ul>
-							</div><!--abs-blr -->
-						</a><!-- pos-relative -->
-					</div><!-- w-1-3 -->
-
-				</div><!-- float-left -->
-
-			</div><!-- h-2-3 -->
-
-			<!-- Bloco inferior -->
-			<div class="h-1-3 oflow-hidden">
-
-				<div class="pr-5 pr-sm-0 pt-5 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
-					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][3]['stamp']), true)?>">
-
-						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][3]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
-
-						<div class="abs-blr color-white p-20 bg-sm-color-7">
-							<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][3]['title']; ?></b></h4>
-								<ul class="list-li-mr-20">
-									<li><?PHP echo $data['post'][3]['created']; ?></li>
-									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][3]['likes'];?></li>
-									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][3]['comments']['count'];?></li>
-								</ul>
-						</div><!--abs-blr -->
-					</a><!-- pos-relative -->
-				</div><!-- w-1-3 -->
-
-				<div class="plr-5 plr-sm-0 pt-5 pt-sm-10 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
-					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][4]['stamp']), true)?>">
-
-						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][4]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
-
-						<div class="abs-blr color-white p-20 bg-sm-color-7">
-							<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][4]['title']; ?></b></h4>
-								<ul class="list-li-mr-20">
-									<li><?PHP echo $data['post'][4]['created']; ?></li>
-									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][4]['likes'];?></li>
-									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][4]['comments']['count'];?></li>
-								</ul>
-						</div><!--abs-blr -->
-					</a><!-- pos-relative -->
-				</div><!-- w-1-3 -->
-
-				<div class="pl-5 pl-sm-0 pt-5 pt-sm-10 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
-					<a class="pos-relative h-100 dplay-block" href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][5]['stamp']), true)?>">
-
-						<div class="img-bg bg-grad-layer-6" style="background: url(<?PHP echo $data['post'][5]['img']['path'] ?>) no-repeat center; background-size: cover;"></div>
-
-						<div class="abs-blr color-white p-20 bg-sm-color-7">
-						<h4 class="mb-10 mb-sm-5"><b><?PHP echo $data['posts'][5]['title']; ?></b></h4>
-								<ul class="list-li-mr-20">
-									<li><?PHP echo $data['post'][5]['created']; ?></li>
-									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $data['posts'][5]['likes'];?></li>
-									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $data['posts'][5]['comments']['count'];?></li>
-								</ul>
-						</div><!--abs-blr -->
-					</a><!-- pos-relative -->
-				</div><!-- w-1-3 -->
-
-			</div><!-- h-2-3 -->
-		</div><!-- h-100vh -->
-	</div><!-- container -->
-
+	<?PHP echo $this->fetch('content'); ?>
 
 	<section>
 		<div class="container">
@@ -261,10 +146,10 @@ echo $this->Html->docType('html5');
 
 						<div class="col-sm-6">
 							<img src="<?PHP echo $data['posts'][6]['img']['path'];?>" alt="<?PHP echo $data['posts'][6]['img']['alt'];?>">
-							<h4 class="pt-20"><a href="<?PHP echo $this->Html->url(array("controller" => "posts", "action" => "view", $data['posts'][6]['stamp']), true)?>"><?PHP echo $data['posts'][6]['title']; ?></a></h4>
+							<h4 class="pt-20"><a href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "view", $data['posts'][6]['stamp']), true)?>"><?PHP echo $data['posts'][6]['title']; ?></a></h4>
 							<ul class="list-li-mr-20 pt-10 pb-20">
 								<li class="color-lite-black">Criado por
-									<a href="<?PHP echo $this->Html->url(array("controller" => "profiles", "action" => "view", $data['posts'][6]['author']['uuid']), true)?>" class="color-black">
+									<a href="<?PHP echo $this->Html->url(array("controller" => "Profiles", "action" => "view", $data['posts'][6]['author']['uuid']), true)?>" class="color-black">
 										<b><?PHP echo $data['posts'][6]['author']['name'];?></b>
 									</a>
 									<?PHP echo $data['post'][6]['created']; ?>
@@ -295,125 +180,75 @@ echo $this->Html->docType('html5');
 
 					</div><!-- row -->
 
-					<h4 class="p-title mt-30"><b>CRYPTO MINING NEWS</b></h4>
+					<h4 class="p-title mt-30"><b>Notícias</b></h4>
 					<div class="row">
-
-						<div class="col-sm-6">
-							<img src="images/crypto-news-6-600x450.jpg" alt="">
-							<h4 class="pt-20"><a href="#"><b>2017 Market Performance: <br/>Crypto vs.Stock</b></a></h4>
-							<ul class="list-li-mr-20 pt-10 mb-30">
-								<li class="color-lite-black">by <a href="#" class="color-black"><b>Olivia Capzallo,</b></a>
-								Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>47</li>
-							</ul>
-						</div><!-- col-sm-6 -->
-
-						<div class="col-sm-6">
-							<img src="images/crypto-news-5-600x450.jpg" alt="">
-							<h4 class="pt-20"><a href="#"><b>2017 Market Performance: <br/>Crypto vs.Stock</b></a></h4>
-							<ul class="list-li-mr-20 pt-10 mb-30">
-								<li class="color-lite-black">by <a href="#" class="color-black"><b>Olivia Capzallo,</b></a>
-								Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>47</li>
-							</ul>
-						</div><!-- col-sm-6 -->
-
-						<div class="col-sm-6">
-							<img src="images/crypto-news-4-600x450.jpg" alt="">
-							<h4 class="pt-20"><a href="#"><b>2017 Market Performance: <br/>Crypto vs.Stock</b></a></h4>
-							<ul class="list-li-mr-20 pt-10 mb-30">
-								<li class="color-lite-black">by <a href="#" class="color-black"><b>Olivia Capzallo,</b></a>
-								Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>47</li>
-							</ul>
-						</div><!-- col-sm-6 -->
-
-						<div class="col-sm-6">
-							<img src="images/crypto-news-3-600x450.jpg" alt="">
-							<h4 class="pt-20"><a href="#"><b>2017 Market Performance: <br/>Crypto vs.Stock</b></a></h4>
-							<ul class="list-li-mr-20 pt-10 mb-30">
-								<li class="color-lite-black">by <a href="#" class="color-black"><b>Olivia Capzallo,</b></a>
-								Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>47</li>
-							</ul>
-						</div><!-- col-sm-6 -->
-
-						<div class="col-sm-6">
-							<img src="images/crypto-news-2-600x450.jpg" alt="">
-							<h4 class="pt-20"><a href="#"><b>2017 Market Performance: <br/>Crypto vs.Stock</b></a></h4>
-							<ul class="list-li-mr-20 pt-10 mb-30">
-								<li class="color-lite-black">by <a href="#" class="color-black"><b>Olivia Capzallo,</b></a>
-								Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>47</li>
-							</ul>
-						</div><!-- col-sm-6 -->
-
-						<div class="col-sm-6">
-							<img src="images/crypto-news-1-600x450.jpg" alt="">
-							<h4 class="pt-20"><a href="#"><b>2017 Market Performance: Crypto vs.Stock</b></a></h4>
-							<ul class="list-li-mr-20 pt-10 mb-30">
-								<li class="color-lite-black">by <a href="#" class="color-black"><b>Olivia Capzallo,</b></a>
-								Jan 25, 2018</li>
-								<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>30,190</li>
-								<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i>47</li>
-							</ul>
-						</div><!-- col-sm-6 -->
-
+						<?PHP foreach($data['news'] as $key => $notice): ?>
+							<div class="col-sm-6">
+								<?PHP echo $this->Html->image($notice['img'], array('alt' => $notice['title'])); ?>
+								<h4 class="pt-20">
+									<a href="<?PHP echo $this->Html->url(array('controller' => 'Posts', 'action'=>'view', $notice['stamp']), true); ?>">
+										<b><?PHP $notice['title'] ?></b>
+									</a>
+								</h4>
+								<ul class="list-li-mr-20 pt-10 mb-30">
+									<li class="color-lite-black">Criado por:
+										<a href="<?PHP echo $this->Html->url(array("controller" => "Profiles", "action" => "view", $notice['author']['uuid']), true)?>" class="color-black">
+											<b><?PHP $notice['author']['name'] ?>,</b>
+										</a> <?PHP $notice['created'] ?>
+									</li>
+									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><?PHP echo $notice['likes'] ?></li>
+									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><?PHP echo $notice['comments']['count'] ?></li>
+								</ul>
+							</div><!-- col-sm-6 -->
+							<?PHP
+								if($key >= 6){
+									break;
+								}
+							?>
+						<?PHP endforeach; ?>
 					</div><!-- row -->
 
-					<a class="dplay-block btn-brdr-primary mt-20 mb-md-50" href="#"><b>VIEW MORE CRYPTO MINING EVENTS</b></a>
+					<a class="dplay-block btn-brdr-primary mt-20 mb-md-50" href="<?PHP echo $this->Html->url(array('controller' => 'Posts', 'action'=>'view'), true); ?>"><b>Ver notícias recentes</b></a>
 				</div><!-- col-md-9 -->
 
 				<div class="d-none d-md-block d-lg-none col-md-3"></div>
 				<div class="col-md-6 col-lg-4">
 					<div class="pl-20 pl-md-0">
 						<ul class="list-block list-li-ptb-15 list-btm-border-white bg-primary text-center">
-							<li><b>1 BTC = $13,2323</b></li>
-							<li><b>1 BCH = $13,2323</b></li>
-							<li><b>1 ETH = $13,2323</b></li>
-							<li><b>1 LTC = $13,2323</b></li>
-							<li><b>1 DAS = $13,2323</b></li>
-							<li><b>1 BCC = $13,2323</b></li>
+							<li data-toggle="tooltip" data-placement="right" title="<?PHP echo $data['money']['USD']['name'] ?>">
+								<b>1 USD = R$<?PHP echo $data['money']['USD']['bid'] ?></b>
+							</li>
+							<li data-toggle="tooltip" data-placement="right" title="<?PHP echo $data['money']['EUR']['name'] ?>">
+								<b>1 EUR = R$<?PHP echo $data['money']['EUR']['bid'] ?></b>
+							</li>
+							<li data-toggle="tooltip" data-placement="right" title="<?PHP echo $data['money']['BTC']['name'] ?>">
+								<b>1 BTC = R$<?PHP echo $data['money']['BTC']['bid'] ?></b>
+							</li>
+							<li data-toggle="tooltip" data-placement="right" title="<?PHP echo $data['money']['LTC']['name'] ?>">
+								<b>1 LTC = R$<?PHP echo $data['money']['LTC']['bid'] ?></b>
+							</li>
+							<li data-toggle="tooltip" data-placement="right" title="<?PHP echo $data['money']['JPY']['name'] ?>">
+								<b>1 JPY = R$<?PHP echo $data['money']['JPY']['bid'] ?></b>
+							</li>
+							<li data-toggle="tooltip" data-placement="right" title="<?PHP echo $data['money']['CNY']['name'] ?>">
+								<b>1 CNY = R$<?PHP echo $data['money']['CNY']['bid'] ?></b>
+							</li>
 						</ul>
 
 						<div class="mtb-50">
 							<h4 class="p-title"><b>Postagens Pop</b></h4>
-							<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
-								<div class="wh-100x abs-tlr"><img src="images/polular-1-100x100.jpg" alt=""></div>
-								<div class="ml-120 min-h-100x">
-									<h5><b>Bitcoin Billionares Hidding in Plain Sight</b></h5>
-									<h6 class="color-lite-black pt-10">by <span class="color-black"><b>Danile Palmer,</b></span> Jan 25, 2018</h6>
-								</div>
-							</a><!-- oflow-hidden -->
+							<?PHP foreach($data['postPop'] as $key => $pop):?>
+								<a class="oflow-hidden pos-relative mb-20 dplay-block" href="<?PHP echo $this->Html->url(array('controller' => 'Posts', 'action'=>'view', $pop['stamp']), true); ?>">
+									<div class="wh-100x abs-tlr">
+									<?PHP echo $this->Html->image($pop['img'], array('alt' => $pop['title'])); ?>
+									</div>
+									<div class="ml-120 min-h-100x">
+										<h5><b><?PHP echo $pop['title'] ?></b></h5>
+										<h6 class="color-lite-black pt-10">Criado por: <span class="color-black"><b><?PHP echo $pop['author']['name'] ?>, </b></span><?PHP echo $pop['created'] ?></h6>
+									</div>
+								</a><!-- oflow-hidden -->
 
-							<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
-								<div class="wh-100x abs-tlr"><img src="images/polular-2-100x100.jpg" alt=""></div>
-								<div class="ml-120 min-h-100x">
-									<h5><b>Bitcoin Billionares Hidding in Plain Sight</b></h5>
-									<h6 class="color-lite-black pt-10">by <span class="color-black"><b>Danile Palmer,</b></span> Jan 25, 2018</h6>
-								</div>
-							</a><!-- oflow-hidden -->
-
-							<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
-								<div class="wh-100x abs-tlr"><img src="images/polular-3-100x100.jpg" alt=""></div>
-								<div class="ml-120 min-h-100x">
-									<h5><b>Bitcoin Billionares Hidding in Plain Sight</b></h5>
-									<h6 class="color-lite-black pt-10">by <span class="color-black"><b>Danile Palmer,</b></span> Jan 25, 2018</h6>
-								</div>
-							</a><!-- oflow-hidden -->
-
-							<a class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
-								<div class="wh-100x abs-tlr"><img src="images/polular-4-100x100.jpg" alt=""></div>
-								<div class="ml-120 min-h-100x">
-									<h5><b>Bitcoin Billionares Hidding in Plain Sight</b></h5>
-									<h6 class="color-lite-black pt-10">by <span class="color-black"><b>Danile Palmer,</b></span> Jan 25, 2018</h6>
-								</div>
-							</a><!-- oflow-hidden -->
+							<?PHP if($key >= 4){break;} endforeach; ?>
 
 						</div><!-- mtb-50 -->
 
@@ -422,17 +257,16 @@ echo $this->Html->docType('html5');
 							<div class="abs-tblr bg-layer-7 text-center color-white">
 								<div class="dplay-tbl">
 									<div class="dplay-tbl-cell">
-										<h4><b>Available for mobile & desktop</b></h4>
-										<a class="mt-15 color-primary link-brdr-btm-primary" href="#"><b>Download for free</b></a>
+										<h4><b>Disponível para mobile</b></h4>
+										<a class="mt-15 color-primary link-brdr-btm-primary" href="#"><b>Baixe grátis</b></a>
 									</div><!-- dplay-tbl-cell -->
 								</div><!-- dplay-tbl -->
 							</div><!-- abs-tblr -->
 						</div><!-- mtb-50 -->
 
 						<div class="mtb-50 mb-md-0">
-							<h4 class="p-title"><b>NEWSLETTER</b></h4>
-							<p class="mb-20">Subscribe to our newsletter to get notification about new updates,
-								information, discount, etc..</p>
+							<h4 class="p-title"><b>Boletim de Noticias</b></h4>
+							<p class="mb-20">Assine a nossa newsletter para receber notificações sobre novas atualizações, informações, descontos, etc.</p>
 							<form class="nwsltr-primary-1">
 								<input type="text" placeholder="Your email"/>
 								<button type="submit"><i class="ion-ios-paperplane"></i></button>
@@ -446,9 +280,7 @@ echo $this->Html->docType('html5');
 		</div><!-- container -->
 	</section>
 
-
 	<footer class="bg-191 color-ccc">
-
 		<div class="container">
 			<div class="pt-50 pb-20 pos-relative">
 				<div class="abs-tblr pt-50 z--1 text-center">
@@ -458,42 +290,48 @@ echo $this->Html->docType('html5');
 
 					<div class="col-sm-4">
 						<div class="mb-30">
-							<a href="#"><img src="images/logo-white.png"></a>
-							<p class="mtb-20 color-ccc">Bit coin is an open-source, peer-to-peer, digital decentralized cryptocurrency.
-							Powered by blockchain technology, its defining characteristic is</p>
-							<p class="color-ash"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ion-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-</p>
+							<?php
+								echo $this->Html->link(
+									$this->Html->image("logo.png", array("alt" => "MeuBlog")),
+									array(
+										'controller' => 'Pages',
+										'action' => 'home',
+									)
+								);
+							?>
+							<p class="mtb-20 color-ccc">Este blog apresenta técnicas e dicas para que você faça os melhores investimentos e seguros</p>
+							<p class="color-ash">
+							Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ion-heart" aria-hidden="true"></i> by <a href="" target="_blank">Tiago Pereira</a>
+							</p>
 						</div><!-- mb-30 -->
 					</div><!-- col-md-4 -->
 
 					<div class="col-sm-4">
 						<div class="mb-30">
-							<h5 class="color-primary mb-20"><b>MOST POPULAR</b></h5>
+							<h5 class="color-primary mb-20"><b>Mais Populares</b></h5>
 							<div class="mb-20">
-								<a class="color-white" href="#"><b>Its Make or Break Time for Bitcoin</b></a>
-								<h6 class="mt-10">Jan 25, 2018</h6>
+								<a class="color-white" href="<?PHP echo $data['postPop'][0]['title'] ?>"><b><?PHP echo $data['postPop'][0]['title'] ?></b></a>
+								<h6 class="mt-10"><?PHP echo $data['postPop'][0]['created'] ?></h6>
 							</div>
 							<div class="brdr-ash-1 opacty-2 mr-30"></div>
-							<div class="mt-20">
-								<a class="color-white" href="#"><b>Bitcoin's roller coster ride is not over</b></a>
-								<h6 class="mt-10">Jan 25, 2018</h6>
+							<div class="mb-20">
+								<a class="color-white" href="<?PHP echo $data['postPop'][1]['title'] ?>"><b><?PHP echo $data['postPop'][1]['title'] ?></b></a>
+								<h6 class="mt-10"><?PHP echo $data['postPop'][1]['created'] ?></h6>
 							</div>
 						</div><!-- mb-30 -->
 					</div><!-- col-md-4 -->
 
 					<div class="col-sm-4">
 						<div class="mb-30">
-							<h5 class="color-primary mb-20"><b>MOST POPULAR</b></h5>
+							<h5 class="color-primary mb-20"><b>Recentes</b></h5>
 							<div class="mb-20">
-								<a class="color-white" href="#"><b>Its Make or Break Time for Bitcoin</b></a>
-								<h6 class="mt-10">Jan 25, 2018</h6>
+								<a class="color-white" href="<?PHP echo $data['post'][0]['title'] ?>"><b><?PHP echo $data['post'][0]['title'] ?></b></a>
+								<h6 class="mt-10"><?PHP echo $data['post'][0]['created'] ?></h6>
 							</div>
 							<div class="brdr-ash-1 opacty-2 mr-30"></div>
-							<div class="mt-20">
-								<a class="color-white" href="#"><b>Bitcoin's roller coster ride is not over</b></a>
-								<h6 class="mt-10">Jan 25, 2018</h6>
+							<div class="mb-20">
+								<a class="color-white" href="<?PHP echo $data['post'][1]['title'] ?>"><b><?PHP echo $data['post'][1]['title'] ?></b></a>
+								<h6 class="mt-10"><?PHP echo $data['post'][1]['created'] ?></h6>
 							</div>
 						</div><!-- mb-30 -->
 					</div><!-- col-md-4 -->
@@ -506,17 +344,17 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			<div class="oflow-hidden color-ash font-9 text-sm-center ptb-sm-5">
 
 				<ul class="float-left float-sm-none list-a-plr-10 list-a-plr-sm-5 list-a-ptb-15 list-a-ptb-sm-10">
-					<li><a class="pl-0 pl-sm-10" href="#">Terms & Conditions</a></li>
-					<li><a href="#">Privacy policy</a></li>
-					<li><a href="#">Jobs advertising</a></li>
-					<li><a href="#">Contact us</a></li>
+					<li><a class="pl-0 pl-sm-10" href="#">Termos e condições</a></li>
+					<li><a href="#">Regras de Privacidade</a></li>
+					<li><a href="#">Trabalhe conosco</a></li>
+					<li><a href="#">Entre em contato</a></li>
 				</ul>
 				<ul class="float-right float-sm-none list-a-plr-10 list-a-plr-sm-5 list-a-ptb-15 list-a-ptb-sm-5">
-					<li><a class="pl-0 pl-sm-10" href="#"><i class="ion-social-facebook"></i></a></li>
-					<li><a href="#"><i class="ion-social-twitter"></i></a></li>
-					<li><a href="#"><i class="ion-social-google"></i></a></li>
-					<li><a href="#"><i class="ion-social-instagram"></i></a></li>
-					<li><a href="#"><i class="ion-social-bitcoin"></i></a></li>
+					<li><a class="pl-0 pl-sm-10" href="https://www.facebook.com/"  target="_blank"><i class="ion-social-facebook"></i></a></li>
+					<li><a href="https://twitter.com/"  target="_blank"><i class="ion-social-twitter"></i></a></li>
+					<li><a href="https://google.com.br/"  target="_blank"><i class="ion-social-google"></i></a></li>
+					<li><a href="https://www.instagram.com/?hl=pt-br"  target="_blank"><i class="ion-social-instagram"></i></a></li>
+					<li><a href="https://www.mercadobitcoin.com.br/"  target="_blank"><i class="ion-social-bitcoin"></i></a></li>
 				</ul>
 
 			</div><!-- oflow-hidden -->
@@ -530,5 +368,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 										'bootstrap.js',
 										'scripts.js'));
 	?>
+	<?php echo $this->Js->writeBuffer(); ?>
 </body>
 </html>

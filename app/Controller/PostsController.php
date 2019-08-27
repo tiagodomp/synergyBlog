@@ -94,12 +94,12 @@ class PostsController extends AppController
 			"posts" => array(
 				0 => array(
 					'stamp' => '',
+					'title'	=> '',
+					'description' => '',
 					'img' => array(
 						'path'  => '',
 						'alt'	=> '',
 					),
-					'title'	=> '',
-					'description' => '',
 					'author' => array(
 						'name'	=> '',
 						'uuid'	=> '',
@@ -115,5 +115,16 @@ class PostsController extends AppController
 				),
 			),
 		);
+
+		$this->set(compact('data'));
+		$this->layout = 'blog';
+	}
+
+	public function viewNews(string $stamp = null){
+		if(!empty($stamp)){
+			//uma noticia buscada através do seu stamp
+		}
+
+		//todas as noticias
 	}
 }

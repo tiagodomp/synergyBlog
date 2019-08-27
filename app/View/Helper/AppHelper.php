@@ -20,6 +20,7 @@
  */
 
 App::uses('Helper', 'View');
+App::uses('JsHelper', 'View');
 
 /**
  * Application helper
@@ -30,4 +31,5 @@ App::uses('Helper', 'View');
  * @package       app.View.Helper
  */
 class AppHelper extends Helper {
+	public $helpers = array('Js');
 }

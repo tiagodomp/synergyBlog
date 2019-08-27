@@ -126,7 +126,5 @@ class Profile extends AppModel {
 		),
 	);
 
-	public $virtualFields = array(
-		'fullName' =>
-	);
+	public $virtualFields = array();
 }
