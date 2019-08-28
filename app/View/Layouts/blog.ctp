@@ -40,7 +40,7 @@ echo $this->Html->docType('html5');
 												'Logar',
 												array(
 													'controller' => 'users',
-													'action' => 'loginModal',
+													'action' => 'login_modal',
 												),
 												array('class'=>  "pl-0 pl-sm-10")
 											);
@@ -51,7 +51,7 @@ echo $this->Html->docType('html5');
 												'Sobre Nós',
 												array(
 													'controller' => 'pages',
-													'action' => 'sobreNos',
+													'action' => 'blog_aboutUs',
 												)
 											); ?>
 						</li>
@@ -59,17 +59,17 @@ echo $this->Html->docType('html5');
 												'Contatos',
 												array(
 													'controller' => 'pages',
-													'action' => 'contatos',
+													'action' => 'blog_contacts',
 												)
 											); ?>
 						</li>
 					</ul>
 					<ul class="float-right float-sm-none list-a-plr-10 list-a-plr-sm-5 list-a-ptb-15 list-a-ptb-sm-5">
-						<li><a class="pl-0 pl-sm-10" href="https://www.facebook.com/" target="_blank"><i class="ion-social-facebook"></i></a></li>
-						<li><a href="https://twitter.com/" target="_blank"><i class="ion-social-twitter"></i></a></li>
-						<li><a href="https://google.com.br/" target="_blank"><i class="ion-social-google"></i></a></li>
-						<li><a href="https://www.instagram.com/?hl=pt-br" target="_blank"><i class="ion-social-instagram"></i></a></li>
-						<li><a href="https://www.mercadobitcoin.com.br/" target="_blank"><i class="ion-social-bitcoin"></i></a></li>
+						<li><a class="pl-0 pl-sm-10" href="https://www.facebook.com/" 		target="_blank"><i class="ion-social-facebook"></i></a></li>
+						<li><a href="https://twitter.com/" 									target="_blank"><i class="ion-social-twitter"></i></a></li>
+						<li><a href="https://google.com.br/" 								target="_blank"><i class="ion-social-google"></i></a></li>
+						<li><a href="https://www.instagram.com/?hl=pt-br" 					target="_blank"><i class="ion-social-instagram"></i></a></li>
+						<li><a href="https://www.mercadobitcoin.com.br/" 					target="_blank"><i class="ion-social-bitcoin"></i></a></li>
 					</ul>
 
 				</div><!-- top-menu -->
@@ -83,7 +83,7 @@ echo $this->Html->docType('html5');
 										array(
 											'alt' 		=> 'Logo do blog',
 											'border' 	=> '0',
-											'url'		=> array('controller' => 'Pages', 'action' => 'home' )
+											'url'		=> array('controller' => 'Pages', 'action' => 'blog_home' )
 											)
 										);
 			?>
@@ -106,29 +106,41 @@ echo $this->Html->docType('html5');
 				<li>
 					<?php
 					echo $this->Html->link(
-						'NOTÍCIAS', array( 'controller' => 'Posts', 'action' => 'news'));
+						'NOTÍCIAS', array( 'controller' => 'Posts', 'action' => 'blog_news'));
 					?>
 				</li>
 				<li class="drop-down">
 				<a href="<?php
-					echo $this->Html->url(array('controller' => 'Posts', 'action' => 'analise'));?>
+					echo $this->Html->url(array('controller' => 'Posts', 'action' => 'blog_analyze'));?>
 					">ANÁLISE TÉCNICA<i class="ion-arrow-down-b"></i></a>
 					<ul class="drop-down-menu drop-down-inner">
 						<li><?php
 							echo $this->Html->link(
-								'Em Destaque', array( 'controller' => 'Posts', 'action' => 'news', 'destaque'));
+								'Em Destaque', array( 'controller' => 'Posts', 'action' => 'blog_news', 'destaque'));
 							?>
 						</li>
 						<li><?php
 							echo $this->Html->link(
-								'Pelo Editor', array( 'controller' => 'Posts', 'action' => 'news', 'editores'));
+								'Pelo Editor', array( 'controller' => 'Posts', 'action' => 'blog_news', 'editores'));
 							?>
 						</li>
 					</ul>
 				</li>
-				<li><a href="04_FAQS.html">TIMELINE</a></li>
-				<li><a href="05_FAQS-single.html">INVESTIMENTOS</a></li>
-				<li><a href="06_contact-us.html">SEGUROS</a></li>
+				<li>
+					<a href="<?php echo $this->Html->url(array('controller' => 'Posts', 'action' => 'blog_timeline'));?>">
+						TIMELINE
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo $this->Html->url(array('controller' => 'Posts', 'action' => 'blog_investment'));?>">
+						INVESTIMENTOS
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo $this->Html->url(array('controller' => 'Posts', 'action' => 'blog_insurance'));?>">
+						SEGUROS
+					</a>
+				</li>
 			</ul>
 			<div class="clearfix"></div>
 		</div><!-- container -->
@@ -146,10 +158,10 @@ echo $this->Html->docType('html5');
 
 						<div class="col-sm-6">
 							<img src="<?PHP echo $data['posts'][6]['img']['path'];?>" alt="<?PHP echo $data['posts'][6]['img']['alt'];?>">
-							<h4 class="pt-20"><a href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "view", $data['posts'][6]['stamp']), true)?>"><?PHP echo $data['posts'][6]['title']; ?></a></h4>
+							<h4 class="pt-20"><a href="<?PHP echo $this->Html->url(array("controller" => "Posts", "action" => "blog_view", $data['posts'][6]['stamp']), true)?>"><?PHP echo $data['posts'][6]['title']; ?></a></h4>
 							<ul class="list-li-mr-20 pt-10 pb-20">
 								<li class="color-lite-black">Criado por
-									<a href="<?PHP echo $this->Html->url(array("controller" => "Profiles", "action" => "view", $data['posts'][6]['author']['uuid']), true)?>" class="color-black">
+									<a href="<?PHP echo $this->Html->url(array("controller" => "Profiles", "action" => "blog_view", $data['posts'][6]['author']['uuid']), true)?>" class="color-black">
 										<b><?PHP echo $data['posts'][6]['author']['name'];?></b>
 									</a>
 									<?PHP echo $data['post'][6]['created']; ?>
@@ -186,13 +198,13 @@ echo $this->Html->docType('html5');
 							<div class="col-sm-6">
 								<?PHP echo $this->Html->image($notice['img'], array('alt' => $notice['title'])); ?>
 								<h4 class="pt-20">
-									<a href="<?PHP echo $this->Html->url(array('controller' => 'Posts', 'action'=>'view', $notice['stamp']), true); ?>">
+									<a href="<?PHP echo $this->Html->url(array('controller' => 'Posts', 'action'=>'blog_view', $notice['stamp']), true); ?>">
 										<b><?PHP $notice['title'] ?></b>
 									</a>
 								</h4>
 								<ul class="list-li-mr-20 pt-10 mb-30">
 									<li class="color-lite-black">Criado por:
-										<a href="<?PHP echo $this->Html->url(array("controller" => "Profiles", "action" => "view", $notice['author']['uuid']), true)?>" class="color-black">
+										<a href="<?PHP echo $this->Html->url(array("controller" => "Profiles", "action" => "blog_view", $notice['author']['uuid']), true)?>" class="color-black">
 											<b><?PHP $notice['author']['name'] ?>,</b>
 										</a> <?PHP $notice['created'] ?>
 									</li>
@@ -238,7 +250,7 @@ echo $this->Html->docType('html5');
 						<div class="mtb-50">
 							<h4 class="p-title"><b>Postagens Pop</b></h4>
 							<?PHP foreach($data['postPop'] as $key => $pop):?>
-								<a class="oflow-hidden pos-relative mb-20 dplay-block" href="<?PHP echo $this->Html->url(array('controller' => 'Posts', 'action'=>'view', $pop['stamp']), true); ?>">
+								<a class="oflow-hidden pos-relative mb-20 dplay-block" href="<?PHP echo $this->Html->url(array('controller' => 'Posts', 'action'=>'blog_view', $pop['stamp']), true); ?>">
 									<div class="wh-100x abs-tlr">
 									<?PHP echo $this->Html->image($pop['img'], array('alt' => $pop['title'])); ?>
 									</div>
@@ -295,7 +307,7 @@ echo $this->Html->docType('html5');
 									$this->Html->image("logo.png", array("alt" => "MeuBlog")),
 									array(
 										'controller' => 'Pages',
-										'action' => 'home',
+										'action' => 'blog_home',
 									)
 								);
 							?>
@@ -363,7 +375,7 @@ echo $this->Html->docType('html5');
 
 	<!-- SCIPTS -->
 
-	<?php echo $this->Html->js(array('jquery-3.2.1.min',
+	<?php echo $this->Html->script(array('jquery-3.2.1.min',
 										'tether.min.js',
 										'bootstrap.js',
 										'scripts.js'));

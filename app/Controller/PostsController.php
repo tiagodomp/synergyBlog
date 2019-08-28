@@ -9,11 +9,21 @@ class PostsController extends AppController
 
 	public $components = array('RequestHandler', 'Paginator');
 	public $helpers = array('Html', 'Form');
-
 	public $name = 'Posts';
 
-	public function index()
+	public function beforeFilter()
 	{
+		$this->Auth->allow(array(
+			'blog_news',
+			'blog_timeline',
+			'blog_investment',
+			'blog_analyze',
+			'blog_insurance',
+			'blog_view',
+		));
+	}
+
+	public function index(){
 		$posts = $this->Post->find('all');
 		$this->set(array(
 			'posts' => $posts,
@@ -21,8 +31,7 @@ class PostsController extends AppController
 		));
 	}
 
-	public function view(string $uuid)
-	{
+	public function view(string $uuid){
 		$post = $this->Post->findById($id);
 		$this->set(array(
 			'post' => $post,
@@ -30,8 +39,7 @@ class PostsController extends AppController
 		));
 	}
 
-	public function add()
-	{
+	public function add(){
 		//$this->Post->id = $id;
 		if ($this->Post->save($this->request->data)) {
 			$message = array(
@@ -50,8 +58,7 @@ class PostsController extends AppController
 		));
 	}
 
-	public function edit($id)
-	{
+	public function edit($id){
 		$this->Post->id = $id;
 		if ($this->Post->save($this->request->data)) {
 			$message = array(
@@ -70,8 +77,7 @@ class PostsController extends AppController
 		));
 	}
 
-	public function delete($id)
-	{
+	public function delete($id)	{
 		if ($this->Post->delete($id)) {
 			$message = array(
 				'text' => __('Deleted'),
@@ -120,11 +126,56 @@ class PostsController extends AppController
 		$this->layout = 'blog';
 	}
 
-	public function viewNews(string $stamp = null){
-		if(!empty($stamp)){
-			//uma noticia buscada através do seu stamp
+	public function blog_news(string $param = null){
+		$this->layout = 'blog';
+		if(empty($param)){
+
 		}
 
-		//todas as noticias
+		if($param == 'destaque'){
+
+		}
+
+		if($param == 'editores'){
+
+		}
+		/**
+		 implementar
+		 */
+	}
+
+	public function blog_timeline(){
+		$this->layout = 'blog';
+		/**
+		 implementar
+		 */
+	}
+
+	public function blog_investment(){
+		$this->layout = 'blog';
+		/**
+		 implementar
+		 */
+	}
+
+	public function blog_insurance(){
+		$this->layout = 'blog';
+		/**
+		 implementar
+		 */
+	}
+
+	public function blog_view(string $stamp){
+		$this->layout = 'blog';
+		/**
+		 implementar
+		 */
+	}
+
+	public function blog_analyze(){
+		$this->layout = 'blog';
+		/**
+		 implementar
+		 */
 	}
 }

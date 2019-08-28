@@ -8,30 +8,30 @@ App::uses('AppController', 'Controller');
  */
 class ProfilesController extends AppController {
 
-/**
- * Components
- *
- * @var array
- */
+	/**
+	 * Components
+	 *
+	 * @var array
+	 */
 	public $components = array('Paginator');
 
-/**
- * index method
- *
- * @return void
- */
+	/**
+	 * index method
+	 *
+	 * @return void
+	 */
 	public function index() {
 		$this->Profile->recursive = 0;
 		$this->set('profiles', $this->Paginator->paginate());
 	}
 
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $uuid
- * @return void
- */
+	/**
+	 * view method
+	 *
+	 * @throws NotFoundException
+	 * @param string $uuid
+	 * @return void
+	 */
 	public function view(string $uuid = null) {
 		if (!$this->Profile->exists($uuid)) {
 			throw new NotFoundException(__('Invalid profile'));
@@ -40,11 +40,11 @@ class ProfilesController extends AppController {
 		$this->set('profile', $this->Profile->find('first', $options));
 	}
 
-/**
- * add method
- *
- * @return void
- */
+	/**
+	 * add method
+	 *
+	 * @return void
+	 */
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Profile->create();
@@ -57,13 +57,13 @@ class ProfilesController extends AppController {
 		}
 	}
 
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+	/**
+	 * edit method
+	 *
+	 * @throws NotFoundException
+	 * @param string $id
+	 * @return void
+	 */
 	public function edit($id = null) {
 		if (!$this->Profile->exists($id)) {
 			throw new NotFoundException(__('Invalid profile'));
@@ -81,13 +81,13 @@ class ProfilesController extends AppController {
 		}
 	}
 
-/**
- * delete method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
+	/**
+	 * delete method
+	 *
+	 * @throws NotFoundException
+	 * @param string $id
+	 * @return void
+	 */
 	public function delete($id = null) {
 		if (!$this->Profile->exists($id)) {
 			throw new NotFoundException(__('Invalid profile'));
@@ -100,4 +100,13 @@ class ProfilesController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+
+
+	public function blog_view(string $uuid){
+		$this->layout = 'blog';
+		/**
+		 implementar
+		 */
+	}
+
 }

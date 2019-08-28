@@ -25,17 +25,18 @@ class UsersController extends AppController
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
-		$this->Auth->allow('login', 'add');
+		$this->Auth->allow('login',
+							'add',
+							'login_modal');
 	}
 
-	public function login()
-	{
+	public function login(){
 		//Caso esteja logado redirecionar para index
 		if ($this->Session->check('Auth.User')) {
 			$this->redirect(array('action' => 'index'));
 		}
 
-		// Se for for Post tentar autenticar
+		// Se for Post tentar autenticar
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				$this->Session->setFlash(__('Seja Bem-vindo, ' .$this->Auth->user('username').'!'));
@@ -46,13 +47,11 @@ class UsersController extends AppController
 		}
 	}
 
-	public function logout()
-	{
+	public function logout(){
 		$this->redirect($this->Auth->logout());
 	}
 
-	public function index()
-	{
+	public function index(){
 		$this->paginate = array(
 			'limit' => 5,
 			'order' => array('User.username' => 'asc')
@@ -61,9 +60,7 @@ class UsersController extends AppController
 		$this->set(compact('users'));
 	}
 
-
-	public function add()
-	{
+	public function add(){
 		if ($this->request->is('post')) {
 			// pr($this->request->data);
 			// exit;
@@ -77,8 +74,7 @@ class UsersController extends AppController
 		}
 	}
 
-	public function edit($uuid = null)
-	{
+	public function edit($uuid = null){
 
 		if (!$uuid) {
 			$this->Session->setFlash('usuário não identificado');
@@ -106,8 +102,7 @@ class UsersController extends AppController
 		}
 	}
 
-	public function delete($uuid = null)
-	{
+	public function delete($uuid = null){
 
 		if (!$uuid) {
 			$this->Session->setFlash('Usuário não identificado');
@@ -127,8 +122,7 @@ class UsersController extends AppController
 		$this->redirect(array('action' => 'index'));
 	}
 
-	public function activate($uuid = null)
-	{
+	public function activate($uuid = null){
 
 		if (!$uuid) {
 			$this->Session->setFlash('Usuário não identificado');
@@ -146,5 +140,11 @@ class UsersController extends AppController
 		}
 		$this->Session->setFlash(__('Erro ao ativar usuário'));
 		$this->redirect(array('action' => 'index'));
+	}
+
+	public function login_modal(){
+		/**
+		  implementar
+		 */
 	}
 }

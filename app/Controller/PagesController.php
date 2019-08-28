@@ -53,6 +53,10 @@ class PagesController extends AppController {
 	{
 		$this->Auth->allow(array(
 			'home',
+			'admin_home',
+			'blog_home',
+			'blog_aboutUs',
+			'blog_contacts',
 		));
 	}
 	public function display() {
@@ -89,165 +93,11 @@ class PagesController extends AppController {
 	}
 
 	public function home(){
-		$this->layout = 'blog';
-
-		$data = array(
-			"posts" => array(
-				0 => array(
-					'stamp' => '',
-					'title'	=> 'teste',
-					'description' => 'descrição de teste',
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'author' => array(
-						'name'	=> 'Tiago',
-						'uuid'	=> '001a',
-						'img'	=> '',
-						'description'	=> '',
-					),
-					'likes'	=> 6,
-					'comments'	=> array(
-						'count' => 10,
-					),
-					'created'	=> gmdate('Y-m-d H:i:s'),
-					'modified'	=> '',
-				),
-				1 => array(
-					'stamp' => '',
-					'title'	=> '',
-					'description' => '',
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'author' => array(
-						'name'	=> '',
-						'uuid'	=> '',
-						'img'	=> '',
-						'description'	=> '',
-					),
-					'likes'	=> 0,
-					'comments'	=> array(
-						'count' => 0,
-					),
-					'created'	=> '',
-					'modified'	=> '',
-				),
-				2 => array(
-					'stamp' => '',
-					'title'	=> '',
-					'description' => '',
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'author' => array(
-						'name'	=> '',
-						'uuid'	=> '',
-						'img'	=> '',
-						'description'	=> '',
-					),
-					'likes'	=> 0,
-					'comments'	=> array(
-						'count' => 0,
-					),
-					'created'	=> '',
-					'modified'	=> '',
-				),
-				3 => array(
-					'stamp' => '',
-					'title'	=> '',
-					'description' => '',
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'author' => array(
-						'name'	=> '',
-						'uuid'	=> '',
-						'img'	=> '',
-						'description'	=> '',
-					),
-					'likes'	=> 0,
-					'comments'	=> array(
-						'count' => 0,
-					),
-					'created'	=> '',
-					'modified'	=> '',
-				),
-				4 => array(
-					'stamp' => '',
-					'title'	=> '',
-					'description' => '',
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'author' => array(
-						'name'	=> '',
-						'uuid'	=> '',
-						'img'	=> '',
-						'description'	=> '',
-					),
-					'likes'	=> 0,
-					'comments'	=> array(
-						'count' => 0,
-					),
-					'created'	=> '',
-					'modified'	=> '',
-				),
-				5 => array(
-					'stamp' => '',
-					'title'	=> '',
-					'description' => '',
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'author' => array(
-						'name'	=> '',
-						'uuid'	=> '',
-						'img'	=> '',
-						'description'	=> '',
-					),
-					'likes'	=> 0,
-					'comments'	=> array(
-						'count' => 0,
-					),
-					'created'	=> '',
-					'modified'	=> '',
-				),
-				6 => array(
-					'stamp' => '',
-					'title'	=> '',
-					'description' => '',
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'author' => array(
-						'name'	=> '',
-						'uuid'	=> '',
-						'img'	=> '',
-						'description'	=> '',
-					),
-					'likes'	=> 0,
-					'comments'	=> array(
-						'count' => 0,
-					),
-					'created'	=> '',
-					'modified'	=> '',
-				),
-			),
-		);
-
-		$this->set(compact('data'));
 	}
 
-	public function adminHome(){
-		$this->layout = 'dashboard';
+	public function admin_home(){
+		$this->layout 	= 'dashboard';
+		$this->title	= 'teste';
 	}
 
 	public function cotationMoney(){
@@ -452,5 +302,175 @@ class PagesController extends AppController {
 		// 		"create_date": "2019-08-27 09:07:34"
 		// 	}
 		// }
+	}
+
+	public function blog_home(){
+		$this->layout = 'blog';
+
+		$data = array(
+			"posts" => array(
+				0 => array(
+					'stamp' => '',
+					'title'	=> 'teste',
+					'description' => 'descrição de teste',
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'author' => array(
+						'name'	=> 'Tiago',
+						'uuid'	=> '001a',
+						'img'	=> '',
+						'description'	=> '',
+					),
+					'likes'	=> 6,
+					'comments'	=> array(
+						'count' => 10,
+					),
+					'created'	=> gmdate('Y-m-d H:i:s'),
+					'modified'	=> '',
+				),
+				1 => array(
+					'stamp' => '',
+					'title'	=> '',
+					'description' => '',
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'author' => array(
+						'name'	=> '',
+						'uuid'	=> '',
+						'img'	=> '',
+						'description'	=> '',
+					),
+					'likes'	=> 0,
+					'comments'	=> array(
+						'count' => 0,
+					),
+					'created'	=> '',
+					'modified'	=> '',
+				),
+				2 => array(
+					'stamp' => '',
+					'title'	=> '',
+					'description' => '',
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'author' => array(
+						'name'	=> '',
+						'uuid'	=> '',
+						'img'	=> '',
+						'description'	=> '',
+					),
+					'likes'	=> 0,
+					'comments'	=> array(
+						'count' => 0,
+					),
+					'created'	=> '',
+					'modified'	=> '',
+				),
+				3 => array(
+					'stamp' => '',
+					'title'	=> '',
+					'description' => '',
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'author' => array(
+						'name'	=> '',
+						'uuid'	=> '',
+						'img'	=> '',
+						'description'	=> '',
+					),
+					'likes'	=> 0,
+					'comments'	=> array(
+						'count' => 0,
+					),
+					'created'	=> '',
+					'modified'	=> '',
+				),
+				4 => array(
+					'stamp' => '',
+					'title'	=> '',
+					'description' => '',
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'author' => array(
+						'name'	=> '',
+						'uuid'	=> '',
+						'img'	=> '',
+						'description'	=> '',
+					),
+					'likes'	=> 0,
+					'comments'	=> array(
+						'count' => 0,
+					),
+					'created'	=> '',
+					'modified'	=> '',
+				),
+				5 => array(
+					'stamp' => '',
+					'title'	=> '',
+					'description' => '',
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'author' => array(
+						'name'	=> '',
+						'uuid'	=> '',
+						'img'	=> '',
+						'description'	=> '',
+					),
+					'likes'	=> 0,
+					'comments'	=> array(
+						'count' => 0,
+					),
+					'created'	=> '',
+					'modified'	=> '',
+				),
+				6 => array(
+					'stamp' => '',
+					'title'	=> '',
+					'description' => '',
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'author' => array(
+						'name'	=> '',
+						'uuid'	=> '',
+						'img'	=> '',
+						'description'	=> '',
+					),
+					'likes'	=> 0,
+					'comments'	=> array(
+						'count' => 0,
+					),
+					'created'	=> '',
+					'modified'	=> '',
+				),
+			),
+		);
+
+		$this->set(compact('data'));
+	}
+
+	public function blog_aboutUs(){
+		/**
+		 implementar
+		 */
+	}
+
+	public function blog_contacts(){
+		/**
+		 implementar
+		 */
 	}
 }

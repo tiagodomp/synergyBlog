@@ -34,6 +34,7 @@ App::uses('JsHelper', 'Controller');
 class AppController extends Controller {
 
 	public $components = array(
+		'Acl',
 		'DebugKit.Toolbar',
 		'Session',
 		'Auth' => array(
@@ -44,10 +45,22 @@ class AppController extends Controller {
 		)
 	);
 
-	public $helpers = array('Js' => array('Jquery'));
+	public $helpers = array('Html', 'Form', 'Session', 'Js' => array('Jquery'));
 
 	public function beforeFilter() {
-		$this->Auth->allow('login');
+		$this->Auth->allow(array('login', 'home', 'register'));
+		$this->Auth->loginAction = array(
+			'controller' => 'users',
+			'action' => 'login'
+		  );
+		  $this->Auth->logoutRedirect = array(
+			'controller' => 'pages',
+			'action' => 'home'
+		  );
+		  $this->Auth->loginRedirect = array(
+			'controller' => 'pages',
+			'action' => 'admin_home'
+		  );
 	}
 
 	public function isAuthorized($user) {
