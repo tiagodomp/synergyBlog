@@ -22,7 +22,8 @@ class User extends AppModel {
 			'foreignKey' => 'users_uuid',
             'dependent'  => true
         )
-    );
+	);
+	public $actAs = array('CrudJson');
 
 	/**
 	 * Validation rules
@@ -75,8 +76,8 @@ class User extends AppModel {
 			'notBlank' => array(
 				'rule' => array('notBlank'),
 				'message' => 'Não é permitido a senha em Branco',
-				'allowEmpty' => false,
-				'required' => true,
+				'allowEmpty' => true,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -93,8 +94,8 @@ class User extends AppModel {
 			'notBlank' => array(
 				'rule' => array('notBlank'),
 				'message' => 'Por favor preencha o campo Username',
-				'allowEmpty' => false,
-				'required' => true,
+				'allowEmpty' => true,
+				'required' => false,
 			),
 			'equaltofield' => array(
 				'rule' => array('equaltofield', 'password'),
@@ -212,8 +213,7 @@ class User extends AppModel {
 	 * @param array $check 	| [password_update => '']
 	 */
 	public function compareLastFivePassword($check){
-		// $this->virtualFields['lastFivePassword'] = "info->>'$.lastFivePassword'";
-		// $senhas = json_decode($this->field('lastFivePassword', array('password' => $check['password'])), true);
+
 		$senhas = (array) $this->query("SELECT info->>'$.lastFivePassword' FROM blog.users WHERE 'uuid' = ".$this->data[$this->uuid]);
 		//Verifico se entre as ultimas 5 alguma é igual, caso positivo retorno falso
 		foreach ($senhas as $key => $senha){
@@ -250,9 +250,13 @@ class User extends AppModel {
 	 * @return boolean
 	 */
 	public function beforeSave($options = array()) {
-		//
+
+
+		// 1º acesso
 		if (isset($this->data[$this->alias]['password'])) {
-			$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
+			$crypto = AuthComponent::password($this->data[$this->alias]['password']);
+			$this->data[$this->alias]['password'] = $crypto;
+			$this->data[$this->alias]['info'] = json_encode(array('lastFivePassword' => [['pass' => $crypto, 'created' => gmdate('Y-m-d H:i:s')]]));
 		}
 
 		// Ao atualizar a senha

@@ -160,7 +160,7 @@
  *	`admin_index()` and `/admin/controller/index`
  *	`manager_index()` and `/manager/controller/index`
  */
-	Configure::write('Routing.prefixes', array('admin', 'master', 'worker'));
+	Configure::write('Routing.prefixes', array('admin', 'blog'));
 
 /**
  * Turn off all caching application-wide.

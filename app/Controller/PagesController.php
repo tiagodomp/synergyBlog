@@ -97,7 +97,6 @@ class PagesController extends AppController {
 
 	public function admin_home(){
 		$this->layout 	= 'dashboard';
-		$this->title	= 'teste';
 	}
 
 	public function cotationMoney(){
@@ -463,12 +462,14 @@ class PagesController extends AppController {
 	}
 
 	public function blog_aboutUs(){
+		$this->layout = 'blog';
 		/**
 		 implementar
 		 */
 	}
 
 	public function blog_contacts(){
+		$this->layout = 'blog';
 		/**
 		 implementar
 		 */

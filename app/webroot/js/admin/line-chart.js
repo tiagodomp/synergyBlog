@@ -1175,12 +1175,12 @@ if ($('#seolinechart1').length) {
         type: 'line',
         // The data for our dataset
         data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July", "January", "February", "March", "April", "May"],
+            labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
             datasets: [{
-                label: "Likes",
+                label: "Curtidas",
                 backgroundColor: "rgba(104, 124, 247, 0.6)",
                 borderColor: '#8596fe',
-                data: [18, 41, 86, 49, 20, 35, 20, 50, 49, 30, 45, 25],
+                //data: [18, 20, 86, 49, 20, 35, 20, 50, 49, 30, 45, 25],
             }]
         },
         // Configuration options go here
@@ -1230,7 +1230,10 @@ if ($('#seolinechart1').length) {
 
 /*-------------- 7 line chart chartjs start ------------*/
 if ($('#seolinechart2').length) {
-    var ctx = document.getElementById("seolinechart2").getContext('2d');
+	var ctx = document.getElementById("seolinechart2").getContext('2d');
+	var dataJson = jQuery('#seolinechart2').attr("data-chart");
+	var dataChart = typeof dataJson == 'string' ? JSON.parse(dataJson) : dataJson;
+	console.log(dataChart);
     var chart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'line',
@@ -1238,7 +1241,7 @@ if ($('#seolinechart2').length) {
         data: {
             labels: ["January", "February", "March", "April", "May", "June", "July", "January", "February", "March", "April", "May"],
             datasets: [{
-                label: "Share",
+                label: "Comentários",
                 backgroundColor: "rgba(96, 241, 205, 0.2)",
                 borderColor: '#3de5bb',
                 data: [18, 41, 86, 49, 20, 35, 20, 50, 49, 30, 45, 25],

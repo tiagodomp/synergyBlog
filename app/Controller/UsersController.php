@@ -25,17 +25,19 @@ class UsersController extends AppController
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
-		$this->Auth->allow('login',
-							'add',
-							'login_modal');
+		$this->Auth->allow('admin_login',
+							'admin_register',
+							'admin_login_modal',
+							'admin_lock'
+						);
 	}
 
-	public function login(){
+	public function admin_login(){
 		//Caso esteja logado redirecionar para index
 		if ($this->Session->check('Auth.User')) {
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(array('controller' => 'Pages', 'action' => 'admin_home'));
 		}
-
+		$this->layout = 'dashboard_clean';
 		// Se for Post tentar autenticar
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
@@ -47,7 +49,7 @@ class UsersController extends AppController
 		}
 	}
 
-	public function logout(){
+	public function admin_logout(){
 		$this->redirect($this->Auth->logout());
 	}
 
@@ -60,14 +62,18 @@ class UsersController extends AppController
 		$this->set(compact('users'));
 	}
 
-	public function add(){
+	public function admin_register(){
+
+		$this->layout = 'dashboard_clean';
+
 		if ($this->request->is('post')) {
-			// pr($this->request->data);
-			// exit;
 			$this->User->create();
+			$this->request->data['User']['status'] 	= false;
+			$this->request->data['User']['deleted'] = gmdate('Y-m-d H:i:s');
+
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash('Usuário criado com sucesso');
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'admin_lock', 'email' => $this->request->data['User']['email']));
 			} else {
 				$this->Session->setFlash('Vixi! deu erro ao criar o usuário');
 			}
@@ -126,25 +132,61 @@ class UsersController extends AppController
 
 		if (!$uuid) {
 			$this->Session->setFlash('Usuário não identificado');
-			$this->redirect(array('action' => 'index'));
+			//$this->redirect(array('action' => 'index'));
 		}
 
 		$this->User->uuid = $uuid;
 		if (!$this->User->exists()) {
 			$this->Session->setFlash('uuid Inválido');
-			$this->redirect(array('action' => 'index'));
+			//$this->redirect(); //redirecionar para a pagina anterior
 		}
 		if ($this->User->saveField('status', true) && $this->User->saveField('deleted', null)) {
 			$this->Session->setFlash(__('Usuário foi Ativado'));
-			$this->redirect(array('action' => 'index'));
+			//$this->redirect(); //redirecionar para a pagina anterior
 		}
 		$this->Session->setFlash(__('Erro ao ativar usuário'));
-		$this->redirect(array('action' => 'index'));
+		//$this->redirect(); //redirecionar para a pagina anterior
 	}
 
-	public function login_modal(){
+	public function admin_login_modal(){
 		/**
 		  implementar
 		 */
+	}
+
+	public function admin_home(){
+		$this->layout 	= 'dashboard';
+	}
+
+
+	public function admin_home_adm(){
+		$this->layout 	= 'dashboard';
+	}
+
+	public function admin_home_master(){
+		$this->layout 	= 'dashboard';
+	}
+
+	public function admin_home_worker(){
+		$this->layout 	= 'dashboard';
+	}
+
+	public function admin_lock(string $email = null, string $token = null){
+		$this->layout 	= 'dashboard_clean';
+
+		if(empty($email))
+			$email = $this->request->email;
+
+		if(empty($token))
+			$token = $this->request->token;
+
+
+		$data = [
+			'token' => $token,
+			'email' => $email
+		];
+
+		$this->set('data', $data);
+
 	}
 }

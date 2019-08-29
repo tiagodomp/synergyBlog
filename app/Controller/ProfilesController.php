@@ -101,6 +101,24 @@ class ProfilesController extends AppController {
 		return $this->redirect(array('action' => 'index'));
 	}
 
+	public function admin_notifications(){
+		$this->layout 	= 'dashboard';
+	}
+
+
+	public function admin_messages(){
+		$this->layout 	= 'dashboard';
+	}
+
+
+	public function admin_home(){
+		$this->layout 	= 'dashboard';
+	}
+
+
+	public function admin_config(){
+		$this->layout 	= 'dashboard';
+	}
 
 	public function blog_view(string $uuid){
 		$this->layout = 'blog';

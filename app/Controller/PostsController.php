@@ -95,6 +95,28 @@ class PostsController extends AppController
 		));
 	}
 
+	public function admin_home(){
+		$this->layout 	= 'dashboard';
+	}
+
+	public function admin_news(){
+		$this->layout 	= 'dashboard';
+	}
+
+	public function admin_analyzes(){
+		$this->layout 	= 'dashboard';
+	}
+
+
+	public function admin_notification(string $uuid){
+		$this->layout 	= 'dashboard';
+	}
+
+
+	public function admin_message(){
+		$this->layout 	= 'dashboard';
+	}
+
 	public function getPost(){
 		$data = array(
 			"posts" => array(

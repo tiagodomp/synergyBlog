@@ -38,8 +38,8 @@ class AppController extends Controller {
 		'DebugKit.Toolbar',
 		'Session',
 		'Auth' => array(
-			'loginRedirect' => array('controller' => 'users', 'action' => 'index'),
-			'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
+			'loginRedirect' => array('controller' => 'Pages', 'action' => 'admin_home'),
+			'logoutRedirect' => array('controller' => 'Users', 'action' => 'admin_login'),
 			'authError' => 'Faça login novamente para acessar essa Página',
 			'loginError' => 'Username ou senha estão incorretos'
 		)
@@ -48,17 +48,17 @@ class AppController extends Controller {
 	public $helpers = array('Html', 'Form', 'Session', 'Js' => array('Jquery'));
 
 	public function beforeFilter() {
-		$this->Auth->allow(array('login', 'home', 'register'));
+		//$this->Auth->allow(array('admin_login', 'blog_home', 'admin_register'));
 		$this->Auth->loginAction = array(
-			'controller' => 'users',
-			'action' => 'login'
+			'controller' => 'Users',
+			'action' => 'admin_login'
 		  );
 		  $this->Auth->logoutRedirect = array(
-			'controller' => 'pages',
-			'action' => 'home'
+			'controller' => 'Pages',
+			'action' => 'blog_home'
 		  );
 		  $this->Auth->loginRedirect = array(
-			'controller' => 'pages',
+			'controller' => 'Pages',
 			'action' => 'admin_home'
 		  );
 	}
