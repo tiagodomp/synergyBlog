@@ -52,8 +52,6 @@ class PagesController extends AppController {
 	public function beforeFilter()
 	{
 		$this->Auth->allow(array(
-			'home',
-			'admin_home',
 			'blog_home',
 			'blog_aboutUs',
 			'blog_contacts',

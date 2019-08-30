@@ -38,33 +38,39 @@ class AppController extends Controller {
 		'DebugKit.Toolbar',
 		'Session',
 		'Auth' => array(
+			'authorize'		=> array('Controller'),
 			'loginRedirect' => array('controller' => 'Pages', 'action' => 'admin_home'),
 			'logoutRedirect' => array('controller' => 'Users', 'action' => 'admin_login'),
 			'authError' => 'Faça login novamente para acessar essa Página',
 			'loginError' => 'Username ou senha estão incorretos'
-		)
+		),
+		'Paginator'
 	);
 
-	public $helpers = array('Html', 'Form', 'Session', 'Js' => array('Jquery'));
+	public $helpers = array('Html', 'Form', 'Session', 'Js', 'Paginator');
 
 	public function beforeFilter() {
 		//$this->Auth->allow(array('admin_login', 'blog_home', 'admin_register'));
 		$this->Auth->loginAction = array(
 			'controller' => 'Users',
 			'action' => 'admin_login'
-		  );
-		  $this->Auth->logoutRedirect = array(
+		);
+		$this->Auth->logoutRedirect = array(
+			'plugin'	=> 'blog',
 			'controller' => 'Pages',
 			'action' => 'blog_home'
-		  );
-		  $this->Auth->loginRedirect = array(
+		);
+		$this->Auth->loginRedirect = array(
 			'controller' => 'Pages',
 			'action' => 'admin_home'
-		  );
+		);
+
 	}
 
 	public function isAuthorized($user) {
 		// inserir verificação de role
+		if(!empty($user['deleted']) || !$user['status'])
+			$this->redirect(array('controller' => 'Users', 'action' => 'admin_lock', base64_encode($user['email'])));
 
 		return true;
 	}

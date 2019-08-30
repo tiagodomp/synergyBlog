@@ -415,7 +415,7 @@ Cache::config('_cake_model_', array(
 Cache::config('session', array(
 	'engine' => $engine,
 	'prefix' => $prefix . 'cake_session_',
-	'duration' => $duration,
+	'duration' => '+1 days',//$duration,
 	'serialize' => true,
 	'server' => $server,
 	//'port'	=> 6379,
@@ -424,7 +424,7 @@ Cache::config('session', array(
 Cache::config('default', array(
 	'engine' => $engine,
 	'prefix' => $prefix . 'cake_',
-	'duration' => $duration,
+	'duration' => '+1 days',
 	'serialize' => true,
 	'server' => $server,
 	//'port'	=> 6379,

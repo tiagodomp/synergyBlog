@@ -11,25 +11,24 @@ class UsersController extends AppController
 	 *
 	 * @var mixed
 	 */
-	public $components = array('RequestHandler', 'Paginator');
+	public $components = array('RequestHandler');
 	public $helpers = array('Html', 'Form');
 
 	public $name = 'Users';
 
 	public $paginate = array(
 		'limit' => 25,
-		'conditions' => array('status' => '1'),
+		//'conditions' => array('status' => '1'),
 		'order' => array('User.username' => 'asc'),
 	);
 
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
-		$this->Auth->allow('admin_login',
-							'admin_register',
+		$this->Auth->allow(array('admin_login',
+							'admin_register_public',
 							'admin_login_modal',
-							'admin_lock'
-						);
+							'admin_lock'));
 	}
 
 	public function admin_login(){
@@ -62,7 +61,7 @@ class UsersController extends AppController
 		$this->set(compact('users'));
 	}
 
-	public function admin_register(){
+	public function admin_register_public(){
 
 		$this->layout = 'dashboard_clean';
 
@@ -73,31 +72,29 @@ class UsersController extends AppController
 
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash('Usuário criado com sucesso');
-				$this->redirect(array('action' => 'admin_lock', 'email' => $this->request->data['User']['email']));
+				$this->redirect(array('action' => 'admin_lock', base64_encode($this->request->data['User']['email'])));
 			} else {
 				$this->Session->setFlash('Vixi! deu erro ao criar o usuário');
 			}
 		}
 	}
 
-	public function edit($uuid = null){
-
+	public function admin_edit(string $uuid = null){
 		if (!$uuid) {
 			$this->Session->setFlash('usuário não identificado');
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(array('action' => 'admin_candidatos'));
 		}
-
-		$user = $this->User->findById($uuid);
+		$user = $this->User->findByUuid($uuid);
 		if (!$user) {
 			//$this->Session->setFlash('uuid Inválido');
-			$this->redirect(array('action' => 'index'));
+			$this->redirect(array('action' => 'admin_candidatos'));
 		}
 
 		if ($this->request->is('post') || $this->request->is('put')) {
 			$this->User->uuid = $uuid;
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('Usuário atualizado com sucesso'));
-				$this->redirect(array('action' => 'edit', $uuid));
+				$this->redirect(array('action' => 'admin_edit', $uuid));
 			} else {
 				$this->Session->setFlash(__('Não foi possível atualizar este usuário'));
 			}
@@ -175,18 +172,44 @@ class UsersController extends AppController
 		$this->layout 	= 'dashboard_clean';
 
 		if(empty($email))
-			$email = $this->request->email;
+			$email = (string) isset($this->request->pass[0])?base64_decode($this->request->pass[0]):null;
 
 		if(empty($token))
-			$token = $this->request->token;
+			$token = (string) isset($this->request->pass[1])?base64_decode($this->request->pass[1]):null;
 
 
 		$data = [
 			'token' => $token,
 			'email' => $email
 		];
-
 		$this->set('data', $data);
+	}
+	/**
+	 * Possibilita ao administrador definir as regras para aceitar um novo membro como admin, workerMaster e worker
+	 */
+	public function admin_candidatos($uuid = null){
+		$this->layout = "dashboard";
 
+		$this->Paginator->settings = array(
+			'order' => array('Users.role' => 'asc')
+		);
+
+		$locks = $this->paginate(
+			'User',
+			array ( 'OR' => array('User.status =' => 0, 'User.deleted IS NOT NULL')
+
+			)
+		);
+
+		$actives = $this->paginate(
+			'User',
+			array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL'))
+		);
+
+		$data = array(
+			'locks' => $locks,
+			'actives' => $actives
+		);
+		$this->set(compact('locks', 'actives'));
 	}
 }

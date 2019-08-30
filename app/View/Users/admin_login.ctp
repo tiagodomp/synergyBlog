@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="form-footer text-center mt-5">
-                            <p class="text-muted">Quer contribruir ? <a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action'=>'admin_register'), true); ?>">Registre-se</a></p>
+                            <p class="text-muted">Quer contribruir ? <a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action'=>'admin_register_public'), true); ?>">Registre-se</a></p>
                         </div>
                     </div>
                 </form>

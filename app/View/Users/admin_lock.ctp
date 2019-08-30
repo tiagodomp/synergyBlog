@@ -4,14 +4,18 @@
 <div class="login-area">
         <div class="container">
             <div class="login-box ptb--100">
-                <form>
+				<?php echo $this->Form->create('User'); ?>
                     <div class="login-form-head">
                         <h4>Em avaliação</h4>
                         <p>Você precisa de um token de autorização <br /> confira seu E-mail!</p>
                     </div>
                     <div class="login-form-body">
 						<?php if(!empty($data['email'])): ?>
-							<p> Você recebera o token no seguinte E-mail : <?php echo $data['email'] ?> </p>
+							<div class="form-gp">
+								<p> Você recebera o token no seguinte E-mail :
+									<?php echo $data['email'] ?> </p>
+								<i class="ti-email"></i>
+							</div>
 						<?php endif; ?>
 						<div class="form-gp">
 							<?php echo $this->Form->input('token', array( 'div' => false, 'value' => $data['token'], 'label' => 'Cole seu token aqui')); ?>
