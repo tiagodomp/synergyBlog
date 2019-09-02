@@ -40,8 +40,8 @@ class AppController extends Controller {
 		'Auth' => array(
 			'authorize'		=> array('Controller'),
 			'loginRedirect' => array('controller' => 'Pages', 'action' => 'admin_home'),
-			'logoutRedirect' => array('controller' => 'Users', 'action' => 'admin_login'),
-			'authError' => 'Faça login novamente para acessar essa Página',
+			'logoutRedirect' => array('controller' => 'Pages', 'action' => 'blog_home'),
+			'authError' => 'Você não tem permissão para acessar essa página',
 			'loginError' => 'Username ou senha estão incorretos'
 		),
 		'Paginator'
@@ -56,7 +56,7 @@ class AppController extends Controller {
 			'action' => 'admin_login'
 		);
 		$this->Auth->logoutRedirect = array(
-			'plugin'	=> 'blog',
+			//'plugin'	=> 'blog',
 			'controller' => 'Pages',
 			'action' => 'blog_home'
 		);
@@ -68,10 +68,16 @@ class AppController extends Controller {
 	}
 
 	public function isAuthorized($user) {
-		// inserir verificação de role
+		// Verifica se o usuário esta ativo
 		if(!empty($user['deleted']) || !$user['status'])
 			$this->redirect(array('controller' => 'Users', 'action' => 'admin_lock', base64_encode($user['email'])));
 
-		return true;
+		$aco = 'controllers/'.$this->params['controller'];
+
+		//Informando qual grupo o usuario pertence
+		$aro = $this->Auth->user('role_uuid');
+
+		//Retornando a validação do privilégio solicitante - recurso/privilegio
+		return $this->Acl->check($aro, $aco, $this->params['action']);
 	}
 }

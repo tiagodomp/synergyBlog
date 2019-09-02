@@ -54,7 +54,7 @@
 	 *  rotas de acesso as definições do usuário
 	 */
 	Router::connect('/dashboard', array('controller' => 'users', 'action' => 'index'));
-	Router::connect('/login', array('controller' => 'users', 'action' => 'login'));
+	Router::connect('/login', array('prefix' => 'admin', 'controller' => 'users', 'action' => 'login'));
 	Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
 	Router::connect('/blog', array('controller' => 'post', 'action' => 'getPost'));
 	Router::connect('/blog', array('controller' => 'post', 'action' => 'getPost'));

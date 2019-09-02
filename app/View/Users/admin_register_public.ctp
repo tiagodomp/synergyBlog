@@ -18,10 +18,10 @@
                             <i class="ti-email"></i>
                         </div>
                         <div class="form-gp">
-							<?php echo $this->Form->input('role', array(
-								'options' 	=> array( 'admin' => 'Administrador', 'workerMaster' => 'Funcionário Mestre', 'worker' => 'Funcionário'),
+							<?php echo $this->Form->input('role_uuid', array(
 								'div'		=> false,
-								'label'		=> 'Solicite o seu cargo'
+								'label'		=> false,
+								'class'		=> 'form_control',
 							));
 							?>
                             <i class="ti-panel"></i>

@@ -27,7 +27,7 @@
 								<td><?PHP echo $lock['User']['status'];?></td>
 								<td><?PHP echo $lock['User']['username']; ?></td>
 								<td><?PHP echo $lock['User']['email']; ?></td>
-								<td><?PHP echo $lock['User']['role']; ?></td>
+								<td><?PHP echo $lock['Role']['name']; ?></td>
 								<td><?PHP echo $lock['User']['created']; ?></td>
 								<td><?PHP echo $this->Html->link('Ver Pedido', array(
 											'controller' => 'Users',

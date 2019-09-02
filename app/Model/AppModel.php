@@ -206,6 +206,24 @@ class AppModel extends Model {
 	}
 
 	 /**
+     * Gero um path-dot Json respectivo ao conteúdo do array
+     * @param array $data
+     * @param string $iterador
+     * @return string $.chave1.valor1.iterador
+     */
+    protected function pathDotJson(array $data, string $iterador = null)
+    {
+        //primeira chave
+        $chave  = array_key_first($data);
+        //primeiro valor
+        $valor   = array_values($data)[0];
+
+        $r = (string) (!is_null($iterador))?'"'.$chave.'"."'.$valor.'"."'.$iterador.'"' : '"'. $chave.'"."'.$valor.'"';
+
+        return $r;
+    }
+
+	 /**
      * Converte os caracteres de latim/ansi para utf-8
      * @param string $valor
      * @return string

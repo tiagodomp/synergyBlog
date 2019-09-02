@@ -116,7 +116,7 @@
  */
 $config['map'] = array(
 	'User' => 'User/username',
-	'Role' => 'User/group_id',
+	'Role' => 'User/role_uuid',
 );
 
 /**
@@ -124,14 +124,18 @@ $config['map'] = array(
  * the roles defined in your role configuration.
  */
 $config['alias'] = array(
-	'Role/4' => 'Role/editor',
+	'Role/1ceaf6d3-5173-41d0-9dd9-778f1c6866ca' => 'Role/Admin',
+	'Role/1d324a0d-f511-45b8-a8b9-8dc7732a1ea0' => 'Role/MasterEditor',
+	'Role/c449b520-09e3-4532-a75b-d1f89f32b0af' => 'Role/Editor',
 );
 
 /**
  * role configuration
  */
 $config['roles'] = array(
-	'Role/admin' => null,
+	'Role/Admin' => null,
+	'Role/MasterEditor' => null,
+	'Role/Editor' => null,
 );
 
 /**
@@ -139,7 +143,10 @@ $config['roles'] = array(
  */
 $config['rules'] = array(
 	'allow' => array(
-		'*' => 'Role/admin',
+		'*' => 'Role/Admin, Role/MasterEditor, Role/Editor',
 	),
-	'deny' => array(),
+	'deny' => array(
+		'controllers/roles/(view|edit|delete)' => 'Role/MasterEditor, Role/Editor',
+		'controllers/users/(view|edit|delete)' => 'Role/MasterEditor, Role/Editor',
+	),
 );

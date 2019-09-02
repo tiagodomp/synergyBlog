@@ -23,6 +23,9 @@
 						</div>
                         <div class="submit-btn-area mt-5">
                             <button id="form_submit" type="submit">Desbloquear <i class="ti-arrow-right"></i></button>
+						</div>
+                        <div class="form-footer text-center mt-5">
+                            <p class="text-muted">Deseja se conectar com <a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action'=>'admin_logout'), true); ?>">outra conta ?</a></p>
                         </div>
                     </div>
                 </form>

@@ -20,6 +20,15 @@ class User extends AppModel {
             'className'  => 'Profile',
 			'conditions' => array('Profile.deleted' => null),
 			'foreignKey' => 'users_uuid',
+			'dependent'  => true,
+        )
+	);
+
+	public $belongsTo = array(
+        'Role' => array(
+            'className'  => 'Role',
+			'conditions' => array('Role.deleted' => null),
+			'foreignKey' => 'role_uuid',
             'dependent'  => true
         )
 	);
@@ -102,9 +111,9 @@ class User extends AppModel {
 				'message' => 'A senha esta diferente!'
 			)
 		),
-		'role' => array(
+		'role_uuid' => array(
 			'valid' => array(
-				'rule' => array('inList', array('admin', 'workerMaster', 'worker')),
+				'rule' => 'searchRole',
 				'message' => 'Esta regra de usuário é invalida',
 				'allowEmpty' => false
 			)
@@ -133,6 +142,14 @@ class User extends AppModel {
 				'message' => 'A senha esta diferente!',
 				'required' => false,
 				//'on' => 'update', // Limit validation to 'create' or 'update' operations [a-z]+.*[A-Z]+.*[0-9]+.*[!@#$%*()_]+
+			)
+		),
+		'info' => array(
+			'bdJson' => array(
+				'rule' 			=> 'infoJson',
+				'message' 		=> 'Erro em salvar informações no Banco',
+				'required'		=> false,
+				'allowEmpty'	=> true,
 			)
 		),
 	);
@@ -166,6 +183,7 @@ class User extends AppModel {
 		}
 	}
 
+
 	/**
 	 * Before isUniqueEmail
 	 * @param array $options
@@ -198,6 +216,27 @@ class User extends AppModel {
 	 */
 	public function alphaNumericDashUnderscore($check) {
 		return preg_match('/^[a-zA-Z0-9_ \-]*$/', array_values($check)[0]);
+	}
+
+	/**
+	 *  Verifica se o valor passado contém somente alfanuméricos e/ou _ ou -
+	 *  @param array $check
+	 *  @return bool
+	 */
+	public function infoJson($check) {
+
+		pr($check);
+		exit;
+		if(empty($check['data']))
+			return false;
+
+		$conditions = array(
+			'uuid' => $this->data[$this->alias]['uuid'],
+		);
+		$conditions = (array) (!empty($check['conditions']))?array_merge($conditions, $check['conditions']):$conditions;
+		$path		= (string) (!empty($check['path']))?$check['path']:$this->pathDotJson($check['data'], gmdate('\TYmdHis'));
+
+		$this->atualizarJson('user', 'info', $conditions , $path, $check['data']);
 	}
 
 	/**
@@ -243,6 +282,12 @@ class User extends AppModel {
 			break;
 		}
 		return $this->data[$this->name][$otherfield] === $this->data[$this->name][$fname];
+	}
+
+	public function searchRole($check){
+		$role = $this->query("SELECT deleted FROM blog.roles WHERE 'uuid' = ".$check['role_uuid']);
+
+		return (empty($role))?true:false;
 	}
 
 	/**

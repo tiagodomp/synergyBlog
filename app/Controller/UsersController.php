@@ -11,7 +11,7 @@ class UsersController extends AppController
 	 *
 	 * @var mixed
 	 */
-	public $components = array('RequestHandler');
+	public $components = array('RequestHandler', 'Acl');
 	public $helpers = array('Html', 'Form');
 
 	public $name = 'Users';
@@ -22,6 +22,11 @@ class UsersController extends AppController
 		'order' => array('User.username' => 'asc'),
 	);
 
+	public $uses = array(
+		'User',
+		'Role',
+	);
+
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
@@ -29,6 +34,27 @@ class UsersController extends AppController
 							'admin_register_public',
 							'admin_login_modal',
 							'admin_lock'));
+	}
+
+	public function set_aro(){
+		$aro =  $this->Acl->Aro;
+
+		$groups = array(
+			0 => array(
+				'alias' => 'administrator',
+			),
+			1 => array(
+				'alias' => 'workerMaster',
+			),
+			2 => array(
+				'alias' => 'worker',
+			),
+		);
+
+		foreach($groups as $alias){
+			$aro->create();
+			$aro->save($alias);
+		}
 	}
 
 	public function admin_login(){
@@ -64,13 +90,15 @@ class UsersController extends AppController
 	public function admin_register_public(){
 
 		$this->layout = 'dashboard_clean';
+		$roleUuids = $this->Role->find('list');
+		$this->set('roleUuids', $roleUuids);
 
 		if ($this->request->is('post')) {
 			$this->User->create();
 			$this->request->data['User']['status'] 	= false;
 			$this->request->data['User']['deleted'] = gmdate('Y-m-d H:i:s');
 
-			if ($this->User->save($this->request->data)) {
+			if ($this->User->save($this->request->data)){
 				$this->Session->setFlash('Usuário criado com sucesso');
 				$this->redirect(array('action' => 'admin_lock', base64_encode($this->request->data['User']['email'])));
 			} else {
@@ -79,19 +107,23 @@ class UsersController extends AppController
 		}
 	}
 
-	public function admin_edit(string $uuid = null){
-		if (!$uuid) {
-			$this->Session->setFlash('usuário não identificado');
-			$this->redirect(array('action' => 'admin_candidatos'));
-		}
-		$user = $this->User->findByUuid($uuid);
-		if (!$user) {
-			//$this->Session->setFlash('uuid Inválido');
-			$this->redirect(array('action' => 'admin_candidatos'));
-		}
+	public function admin_edit(string $uuid = null){ // faz mais lógica inverter, primeiro verificando se trata de uma requisição
+		$this->layout 	= 'dashboard';
 
-		if ($this->request->is('post') || $this->request->is('put')) {
+		if (!empty($this->request->data)) {
 			$this->User->uuid = $uuid;
+
+			if($this->request->data['User']['status'] > 0){
+				$this->request->data['User']['deleted'] = null;
+				$this->request->data['User']['info'] = array(
+					'data' => array(
+						'authorizedBy' 	=> $uuid,
+						'created'		=> gmdate('Y-m-d H:i:s'),
+					),
+					//'conditions' => '',
+					'path' => 'info.register.auth',
+				);
+			}
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('Usuário atualizado com sucesso'));
 				$this->redirect(array('action' => 'admin_edit', $uuid));
@@ -100,9 +132,24 @@ class UsersController extends AppController
 			}
 		}
 
+		if (empty($uuid)) {
+			$this->Session->setFlash('usuário não identificado');
+			$this->redirect(array('action' => 'admin_candidatos'));
+		}
+
+		$user = $this->User->find('first', array('conditions'=> array('User.uuid' => $uuid), 'contain' => 'Role'));
+		$roleUuids = $this->Role->find('list');
+
+		if (empty($user)) {
+			$this->Session->setFlash('uuid Inválido');
+			$this->redirect(array('action' => 'admin_candidatos'));
+		}
+
 		if (!$this->request->data) {
 			$this->request->data = $user;
 		}
+
+		$this->set(array('user' => $user, 'roleUuids' => $roleUuids));
 	}
 
 	public function delete($uuid = null){
@@ -191,14 +238,13 @@ class UsersController extends AppController
 		$this->layout = "dashboard";
 
 		$this->Paginator->settings = array(
-			'order' => array('Users.role' => 'asc')
+			'order' => array('Users.role_uuid' => 'asc'),
+			'contain' => array('Role')
 		);
 
 		$locks = $this->paginate(
 			'User',
-			array ( 'OR' => array('User.status =' => 0, 'User.deleted IS NOT NULL')
-
-			)
+			array ( 'OR' => array('User.status =' => 0, 'User.deleted IS NOT NULL'))
 		);
 
 		$actives = $this->paginate(
