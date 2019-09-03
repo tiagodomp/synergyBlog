@@ -36,27 +36,6 @@ class UsersController extends AppController
 							'admin_lock'));
 	}
 
-	public function set_aro(){
-		$aro =  $this->Acl->Aro;
-
-		$groups = array(
-			0 => array(
-				'alias' => 'administrator',
-			),
-			1 => array(
-				'alias' => 'workerMaster',
-			),
-			2 => array(
-				'alias' => 'worker',
-			),
-		);
-
-		foreach($groups as $alias){
-			$aro->create();
-			$aro->save($alias);
-		}
-	}
-
 	public function admin_login(){
 		//Caso esteja logado redirecionar para index
 		if ($this->Session->check('Auth.User')) {
@@ -114,21 +93,24 @@ class UsersController extends AppController
 			$this->User->uuid = $uuid;
 
 			if($this->request->data['User']['status'] > 0){
+				$this->request->data['User']['uuid']	= $uuid; //acrescentei para evitar erro de validação
 				$this->request->data['User']['deleted'] = null;
-				$this->request->data['User']['info'] = array(
-					'data' => array(
-						'authorizedBy' 	=> $uuid,
-						'created'		=> gmdate('Y-m-d H:i:s'),
-					),
-					//'conditions' => '',
-					'path' => 'info.register.auth',
-				);
+				// $this->request->data['User']['info'] = array(
+				// 	'data' => array(
+				// 		'authorizedBy' 	=> $this->Auth->user('uuid'),
+				// 		'created'		=> gmdate('Y-m-d H:i:s'),
+				// 	),
+				// 	//'conditions' => '',
+				// 	'path' => 'info.register.auth',
+				// );
 			}
+			//pr($this->request->data); exit;
 			if ($this->User->save($this->request->data)) {
 				$this->Session->setFlash(__('Usuário atualizado com sucesso'));
-				$this->redirect(array('action' => 'admin_edit', $uuid));
+				//$this->redirect($this->request->);
 			} else {
 				$this->Session->setFlash(__('Não foi possível atualizar este usuário'));
+				$this->redirect(array('action' => 'admin_edit', $uuid));
 			}
 		}
 
@@ -203,16 +185,92 @@ class UsersController extends AppController
 	}
 
 
-	public function admin_home_adm(){
-		$this->layout 	= 'dashboard';
+	public function admin_administrators(){
+		$this->layout 	= "dashboard";
+		$this->title 	= "Candidatos";
+
+		$this->Paginator->settings = array(
+			'order' => array('Users.role_uuid' => 'asc'),
+			'contain' => array('Role')
+		);
+
+		$admins = $this->paginate(
+			'User',																					//alterar essa maneira de verificação
+			array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL', 'User.role_uuid =' => '1ceaf6d3-5173-41d0-9dd9-778f1c6866ca'))
+		);
+
+		// $actives = $this->paginate(
+		// 	'User',
+		// 	array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL'))
+		// );
+		$this->set(compact('admins'));
 	}
 
-	public function admin_home_master(){
-		$this->layout 	= 'dashboard';
+	public function admin_masters(){
+		$this->layout 	= "dashboard";
+		$this->title 	= "Candidatos";
+
+		$this->Paginator->settings = array(
+			'order' => array('Users.role_uuid' => 'asc'),
+			'contain' => array('Role')
+		);
+
+		$masters = $this->paginate(
+			'User',																					//alterar essa maneira de verificação
+			array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL', 'User.role_uuid =' => '1d324a0d-f511-45b8-a8b9-8dc7732a1ea0'))
+		);
+
+		// $actives = $this->paginate(
+		// 	'User',
+		// 	array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL'))
+		// );
+		$this->set(compact('masters'));
 	}
 
-	public function admin_home_worker(){
-		$this->layout 	= 'dashboard';
+	public function admin_editors(){
+		$this->layout 	= "dashboard";
+		$this->title 	= "Candidatos";
+
+		$this->Paginator->settings = array(
+			'order' => array('Users.role_uuid' => 'asc'),
+			'contain' => array('Role')
+		);
+
+		$editors = $this->paginate(
+			'User',																					//alterar essa maneira de verificação
+			array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL', 'User.role_uuid =' => 'c449b520-09e3-4532-a75b-d1f89f32b0af'))
+		);
+
+		// $actives = $this->paginate(
+		// 	'User',
+		// 	array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL'))
+		// );
+		$this->set(compact('editors'));
+	}
+
+	/**
+	 * Possibilita ao administrador definir as regras para aceitar um novo membro como admin, workerMaster e worker
+	 *  @param string
+	 */
+	public function admin_candidates(){
+		$this->layout 	= "dashboard";
+		$this->title 	= "Candidatos";
+
+		$this->Paginator->settings = array(
+			'order' => array('Users.role_uuid' => 'asc'),
+			'contain' => array('Role')
+		);
+
+		$locks = $this->paginate(
+			'User',
+			array ( 'OR' => array('User.status =' => 0, 'User.deleted IS NOT NULL'))
+		);
+
+		// $actives = $this->paginate(
+		// 	'User',
+		// 	array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL'))
+		// );
+		$this->set(compact('locks'));
 	}
 
 	public function admin_lock(string $email = null, string $token = null){
@@ -231,31 +289,5 @@ class UsersController extends AppController
 		];
 		$this->set('data', $data);
 	}
-	/**
-	 * Possibilita ao administrador definir as regras para aceitar um novo membro como admin, workerMaster e worker
-	 */
-	public function admin_candidatos($uuid = null){
-		$this->layout = "dashboard";
 
-		$this->Paginator->settings = array(
-			'order' => array('Users.role_uuid' => 'asc'),
-			'contain' => array('Role')
-		);
-
-		$locks = $this->paginate(
-			'User',
-			array ( 'OR' => array('User.status =' => 0, 'User.deleted IS NOT NULL'))
-		);
-
-		$actives = $this->paginate(
-			'User',
-			array ( 'AND' => array('User.status =' => 1, 'User.deleted IS NULL'))
-		);
-
-		$data = array(
-			'locks' => $locks,
-			'actives' => $actives
-		);
-		$this->set(compact('locks', 'actives'));
-	}
 }

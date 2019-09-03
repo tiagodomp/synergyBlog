@@ -80,4 +80,148 @@ class AppController extends Controller {
 		//Retornando a validação do privilégio solicitante - recurso/privilegio
 		return $this->Acl->check($aro, $aco, $this->params['action']);
 	}
+
+	public function beforeRender() {
+		parent::beforeRender();
+
+		$redis = new Redis();
+		$redis->connect('redis', 6379);
+
+		if(!empty($this->Auth->user('uuid'))){
+			$admin_data =[
+				'notifications' => [
+					'count'	=> 0,
+					'all' 	=> [
+						[
+							'uuid'	=> null,
+							'type'	=> '',
+							'title'	=> '',
+							'created'	=> '',
+						],
+					],
+				],
+				'messages' => [
+					'count' => 0,
+					'all'	=> [
+						[
+							'uuid'	=> '',
+							'author' => [
+								'uuid'	=> null,
+								'name' 	=> null,
+								'img'	=> null,
+								'msg' 	=> null,
+							],
+							'created' => '',
+						]
+					],
+				],
+				'profile'	=> [
+					'uuid'	=> null,
+					'img'	=> null,
+					'name'	=> null,
+					'first_name'	=> null,
+				],
+			];
+			$redis->set('admin_data', json_encode($admin_data));
+		}else{
+			$blog_data = [
+				'posts'	=> [
+					[
+						'stamp' => '',
+						'title'	=> '',
+						'description' => '',
+						'img' => [
+							'path'  => '',
+							'alt'	=> '',
+						],
+						'author' => [
+							'name'	=> '',
+							'uuid'	=> '',
+							'img'	=> '',
+							'description'	=> '',
+						],
+						'likes'	=> 0,
+						'comments'	=> [
+							'count' => 0,
+						],
+						'created'	=> '',
+						'modified'	=> '',
+					]
+				],
+				'news'	=> [
+					[
+						'stamp' => '',
+						'title'	=> '',
+						'description' => '',
+						'img' => [
+							'path'  => '',
+							'alt'	=> '',
+						],
+						'author' => [
+							'name'	=> '',
+							'uuid'	=> '',
+							'img'	=> '',
+							'description'	=> '',
+						],
+						'likes'	=> 0,
+						'comments'	=> [
+							'count' => 0,
+						],
+						'created'	=> '',
+						'modified'	=> '',
+					]
+				],
+				'money'	=> [
+					'USD' => [
+						'name' => '',
+						'bid' => '',
+					],
+					'EUR' => [
+						'name' => '',
+						'bid' => '',
+					],
+					'BTC' => [
+						'name' => '',
+						'bid' => '',
+					],
+					'LTC' => [
+						'name' => '',
+						'bid' => '',
+					],
+					'JPY' => [
+						'name' => '',
+						'bid' => '',
+					],
+					'CNY' => [
+						'name' => '',
+						'bid' => '',
+					],
+				],
+				'postPop' => [
+					[
+						'stamp' => '',
+						'title'	=> '',
+						'description' => '',
+						'img' => [
+							'path'  => '',
+							'alt'	=> '',
+						],
+						'author' => [
+							'name'	=> '',
+							'uuid'	=> '',
+							'img'	=> '',
+							'description'	=> '',
+						],
+						'likes'	=> 0,
+						'comments'	=> [
+							'count' => 0,
+						],
+						'created'	=> '',
+						'modified'	=> '',
+					]
+				],
+			];
+			$redis->set('blog_data', json_encode($blog_data));
+		}
+    }
 }

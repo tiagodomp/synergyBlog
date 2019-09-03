@@ -1,5 +1,9 @@
 <?php
 //váriaveis globais
+$redis = new Redis();
+$redis->connect('redis', 6379);
+
+$data = json_decode($redis->get('blog_data'), true);
 
 echo $this->Html->docType('html5');
 ?>
@@ -25,6 +29,8 @@ echo $this->Html->docType('html5');
 			echo $this->fetch('meta');
 			echo $this->fetch('css');
 			echo $this->fetch('script');
+
+			//pr($data); exit;
 		?>
 		<!-- Font -->
 		<link href="https://fonts.googleapis.com/css?family=Encode+Sans+Expanded:400,600,700" rel="stylesheet">
@@ -44,6 +50,7 @@ echo $this->Html->docType('html5');
 														'plugin'	=> 'admin', //isso equivale aos prefixo :(
 														'controller'=> 'Users',
 														'action' 	=> 'login',
+														//'full_base'	=> true,
 													),
 													array('class'=>  "pl-0 pl-sm-10")
 												);
@@ -167,7 +174,7 @@ echo $this->Html->docType('html5');
 										<a href="<?PHP echo $this->Html->url(array("controller" => "Profiles", "action" => "blog_view", $data['posts'][6]['author']['uuid']), true)?>" class="color-black">
 											<b><?PHP echo $data['posts'][6]['author']['name'];?></b>
 										</a>
-										<?PHP echo $data['post'][6]['created']; ?>
+										<?PHP echo $data['posts'][6]['created']; ?>
 									</li>
 									<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i><b><?PHP echo $data['posts'][6]['likes'];?></b></li>
 									<li><i class="color-primary mr-5 font-12 ion-chatbubbles"></i><b><?PHP echo $data['posts'][6]['comments']['count'];?></b></li>
@@ -340,13 +347,13 @@ echo $this->Html->docType('html5');
 							<div class="mb-30">
 								<h5 class="color-primary mb-20"><b>Recentes</b></h5>
 								<div class="mb-20">
-									<a class="color-white" href="<?PHP echo $data['post'][0]['title'] ?>"><b><?PHP echo $data['post'][0]['title'] ?></b></a>
-									<h6 class="mt-10"><?PHP echo $data['post'][0]['created'] ?></h6>
+									<a class="color-white" href="<?PHP echo $data['posts'][0]['title'] ?>"><b><?PHP echo $data['posts'][0]['title'] ?></b></a>
+									<h6 class="mt-10"><?PHP echo $data['posts'][0]['created'] ?></h6>
 								</div>
 								<div class="brdr-ash-1 opacty-2 mr-30"></div>
 								<div class="mb-20">
-									<a class="color-white" href="<?PHP echo $data['post'][1]['title'] ?>"><b><?PHP echo $data['post'][1]['title'] ?></b></a>
-									<h6 class="mt-10"><?PHP echo $data['post'][1]['created'] ?></h6>
+									<a class="color-white" href="<?PHP echo $data['posts'][1]['title'] ?>"><b><?PHP echo $data['posts'][1]['title'] ?></b></a>
+									<h6 class="mt-10"><?PHP echo $data['posts'][1]['created'] ?></h6>
 								</div>
 							</div><!-- mb-30 -->
 						</div><!-- col-md-4 -->

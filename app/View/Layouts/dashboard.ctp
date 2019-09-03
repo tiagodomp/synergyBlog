@@ -1,6 +1,9 @@
 <?php
 //váriaveis globais
+$redis = new Redis();
+$redis->connect('redis', 6379);
 
+$data = json_decode($redis->get('admin_data'), true);
 echo $this->Html->docType('html5');
 ?>
 <html lang="pt-br">
@@ -80,10 +83,10 @@ echo $this->Html->docType('html5');
 								<li>
 									<a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Usuários</span></a>
 									<ul class="collapse">
-										<li><a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action' => 'admin_home_adm')) ?>">Administradores</a></li>
-										<li><a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action' => 'admin_home_master')) ?>">Mestres</a></li>
-										<li><a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action' => 'admin_home_worker')) ?>">Funcionários</a></li>
-										<li><a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action' => 'admin_candidatos')) ?>">Candidatos</a></li>
+										<li><a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action' => 'admin_administrators')) ?>">Administradores</a></li>
+										<li><a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action' => 'admin_masters')) ?>">Mestres</a></li>
+										<li><a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action' => 'admin_editors')) ?>">Editores</a></li>
+										<li><a href="<?PHP echo $this->Html->url(array('controller' => 'Users', 'action' => 'admin_candidates')) ?>">Candidatos</a></li>
 									</ul>
 								</li>
 							</ul>
@@ -122,7 +125,9 @@ echo $this->Html->docType('html5');
 								<!-- Notificações -->
 								<li class="dropdown">
 									<i class="ti-bell dropdown-toggle" data-toggle="dropdown">
-										<span><?PHP echo $data['notifications']['count']; ?></span>
+										<?PHP if($data['notifications']['count'] >=1): ?>
+											<span><?PHP echo $data['notifications']['count']; ?></span>
+										<?PHP endif; ?>
 									</i>
 									<div class="dropdown-menu bell-notify-box notify-box">
 										<span class="notify-title">Você tem <?PHP echo $data['notifications']['count']; ?> novas notificações
@@ -145,7 +150,10 @@ echo $this->Html->docType('html5');
 								<!-- Mensagens -->
 								<li class="dropdown">
 									<i class="fa fa-envelope-o dropdown-toggle" data-toggle="dropdown">
-										<span><?PHP echo $data['messages']['count']; ?></span></i>
+										<?PHP if($data['messages']['count'] >=1): ?>
+											<span><?PHP echo $data['messages']['count']; ?></span>
+										<?PHP endif; ?>
+									</i>
 									<div class="dropdown-menu notify-box nt-enveloper-box">
 										<span class="notify-title">Você tem <?PHP echo $data['messages']['count']; ?> novas mensagens
 											<a href="<?php echo $this->Html->url(array('controller' => 'Profiles', 'action' => 'admin_messages'));?>">Ver Todas</a>
@@ -157,9 +165,9 @@ echo $this->Html->docType('html5');
 													<?PHP echo $this->Html->image($msg['author']['img'], array('alt' => $msg['author']['name'])); ?>
 												</div>
 												<div class="notify-text">
-													<p><?PHP echo $data['author']['name']; ?></p>
-													<span class="msg"><?PHP echo $data['author']['msg']; ?></span>
-													<span><?PHP echo $data['created']; ?></span>
+													<p><?PHP echo $msg['author']['name']; ?></p>
+													<span class="msg"><?PHP echo $msg['author']['msg']; ?></span>
+													<span><?PHP echo $msg['created']; ?></span>
 												</div>
 											</a>
 											<?PHP endforeach; ?>
@@ -208,11 +216,7 @@ echo $this->Html->docType('html5');
 					</div>
 				</nav>
 				<!-- page title area end -->
-				<main class="main-content-inner">
-					<div class="row">
-						<?PHP echo $this->fetch('content'); ?>
-					</div>
-				</main>
+				<?PHP echo $this->fetch('content'); ?>
 			</div>
 			<!-- main content area end -->
 

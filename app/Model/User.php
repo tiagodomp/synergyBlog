@@ -110,14 +110,14 @@ class User extends AppModel {
 				'rule' => array('equaltofield', 'password'),
 				'message' => 'A senha esta diferente!'
 			)
-		),
-		'role_uuid' => array(
-			'valid' => array(
-				'rule' => 'searchRole',
-				'message' => 'Esta regra de usuário é invalida',
-				'allowEmpty' => false
-			)
-		),
+		 ),
+		// 'role_uuid' => array(
+		// 	'valid' => array(
+		// 		'rule' => 'searchRole',
+		// 		'message' => 'Esta regra de usuário é invalida',
+		// 		'allowEmpty' => false
+		// 	)
+		// ),
 		'password_update' => array(
 			'lengthBetween' => array(
 				'rule' => array('lengthBetween', 8, 20),
@@ -145,7 +145,7 @@ class User extends AppModel {
 			)
 		),
 		'info' => array(
-			'bdJson' => array(
+			'infoJson' => array(
 				'rule' 			=> 'infoJson',
 				'message' 		=> 'Erro em salvar informações no Banco',
 				'required'		=> false,
@@ -219,24 +219,23 @@ class User extends AppModel {
 	}
 
 	/**
-	 *  Verifica se o valor passado contém somente alfanuméricos e/ou _ ou -
+	 *  insere uma nova info em JSON
 	 *  @param array $check
 	 *  @return bool
 	 */
 	public function infoJson($check) {
 
-		pr($check);
-		exit;
-		if(empty($check['data']))
+		if(empty($check['info']['data']))
 			return false;
 
 		$conditions = array(
 			'uuid' => $this->data[$this->alias]['uuid'],
 		);
-		$conditions = (array) (!empty($check['conditions']))?array_merge($conditions, $check['conditions']):$conditions;
-		$path		= (string) (!empty($check['path']))?$check['path']:$this->pathDotJson($check['data'], gmdate('\TYmdHis'));
 
-		$this->atualizarJson('user', 'info', $conditions , $path, $check['data']);
+		$conditions = (!empty($check['info']['conditions']))?array_merge($conditions, $check['info']['conditions']):$conditions;
+		$path		= (string) (!empty($check['info']['path']))?$check['info']['path']:$this->pathDotJson($check['info']['data'], gmdate('\TYmdHis'));
+
+		return $this->atualizarJson('users', 'info', $conditions , $path, $check['info']['data']);
 	}
 
 	/**
@@ -284,11 +283,14 @@ class User extends AppModel {
 		return $this->data[$this->name][$otherfield] === $this->data[$this->name][$fname];
 	}
 
-	public function searchRole($check){
-		$role = $this->query("SELECT deleted FROM blog.roles WHERE 'uuid' = ".$check['role_uuid']);
 
-		return (empty($role))?true:false;
-	}
+	// public function searchRole($check){
+	// 	$role = $this->Role->find('first', array(
+	// 		'conditions' => array('Role.uuid =' => $check['role_uuid']),
+	// 	));//("SELECT deleted FROM blog.roles WHERE 'uuid' = ".$check['role_uuid']);
+
+	// 	return (!empty($role['Role']['uuid']))?true:false;
+	// }
 
 	/**
 	 * @param array $options

@@ -45,8 +45,8 @@ class AppModel extends Model {
 	 */
 	protected function validarPathJson(string $Tb, array $where, string $collumn, string $pathjson)
 	{
-		$conditions	= $this->geradorWhereString($where);
-		$pathValido = $this->query("SELECT JSON_CONTAINS_PATH(".$collumn.",'one','".$pathjson."') AS retorno FROM ".$Tb." WHERE ".$conditions." limit 1");
+		$conditions	= $this->geradorWhereString($where)[0];
+		$pathValido = $this->query("SELECT JSON_CONTAINS_PATH(".$collumn.",'one','".$pathjson."') AS retorno FROM ".$Tb." WHERE ".$conditions." limit 1")[0][0];
 		//Se existir
 		return (!empty($pathValido) && $pathValido['retorno'] == 1)? true : false;
 	}
@@ -93,9 +93,8 @@ class AppModel extends Model {
 	 */
 	protected function atualizarJson(string $Tb, string $collumn, array $where, string $path, $data)
 	{
-		$whereString = $this->geradorWhereString($where);
+		$whereString = $this->geradorWhereString($where)[0];
 		if($this->salvarRotaJson($Tb, $collumn, $where, $path)){
-
 			$data 		= (is_string($data) || is_int($data))? $this->utf8_ansi($data): "CAST('".$this->utf8_ansi(json_encode($data))."' AS JSON)";
 			$sql     	= (string) "JSON_UNQUOTE(JSON_SET(".$collumn.", '".$path."', $data))";
 			$up		 	= $this->query('update '.$Tb.' set '.$collumn.' = '.$sql.', modified = '.gmdate('Y-m-d H:i:s').' where '.$whereString);
@@ -115,7 +114,7 @@ class AppModel extends Model {
 	 */
 	private function salvarRotaJson(string $Tb, string $collumn, array $where, string $path, string $pathJson = '')
 	{
-		$whereString = $this->geradorWhereString($where);
+		$whereString = $this->geradorWhereString($where)[0];
 
 		//obtém um vetor a partir do caminho cedido
 		$vetorOrigem = (array) $this->str_explode($path, ['.', '$', '\'' ]);
@@ -131,9 +130,12 @@ class AppModel extends Model {
 
 		//Verifico se este caminho json existe no BD
 		$pathValido = $this->validarPathJson($Tb, $where, $collumn, $path);
+
 	//Se existir
 		if($pathValido){
 			if($countLocal == 0 || $countLocal == $countOrigem){
+				debug('chegou aqui');
+				exit;
 				return true;
 			}else{
 				$pathLocal .= '.'.$vetorOrigem[$countLocal];
@@ -188,7 +190,7 @@ class AppModel extends Model {
 		$where = $this->array_divide($where);
 		$whereString = '';
 		foreach($where[0] as $key=>$value){
-			$whereString = ($valueInArray)?$value. ' = ' .$where[1][$key]: $value. ' = ?';
+			$whereString = ($valueInArray)?$value." = '".$where[1][$key]. "'": $value. ' = ?';
 		}
 		return [$whereString, $where[1]];
 	}

@@ -11,8 +11,7 @@ class PostsController extends AppController
 	public $helpers = array('Html', 'Form');
 	public $name = 'Posts';
 
-	public function beforeFilter()
-	{
+	public function beforeFilter(){
 		$this->Auth->allow(array(
 			'blog_news',
 			'blog_timeline',
@@ -22,7 +21,7 @@ class PostsController extends AppController
 			'blog_view',
 		));
 	}
-
+	public $virtualFields = array();
 	public function index(){
 		$posts = $this->Post->find('all');
 		$this->set(array(
