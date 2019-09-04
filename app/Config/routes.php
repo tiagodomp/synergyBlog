@@ -25,15 +25,12 @@
  * its action called 'display', and we pass a param to select the view file
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
-	Router::connect('/blog', array('prefix' => 'blog', 'controller' => 'pages', 'action' => 'home'));
-	Router::connect('/admin', array('prefix' => 'admin', 'controller' => 'pages', 'action' => 'home'));
+	//Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
+	Router::connect('/', array('controller' => 'posts', 'action' => 'index'));
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
-
-
-	Router::connect('/teste', array('controller' => 'Teste', 'action' => 'teste'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on
@@ -46,15 +43,3 @@
  * the built-in default routes.
  */
 	require CAKE . 'Config' . DS . 'routes.php';
-
-	Router::mapResources("posts", array('controller' => 'PostsController'));
-	Router::parseExtensions();
-
-	/**
-	 *  rotas de acesso as definições do usuário
-	 */
-	Router::connect('/dashboard', array('controller' => 'users', 'action' => 'index'));
-	Router::connect('/login', array('prefix' => 'admin', 'controller' => 'users', 'action' => 'login'));
-	Router::connect('/logout', array('controller' => 'users', 'action' => 'logout'));
-	Router::connect('/blog', array('controller' => 'post', 'action' => 'getPost'));
-	Router::connect('/blog', array('controller' => 'post', 'action' => 'getPost'));

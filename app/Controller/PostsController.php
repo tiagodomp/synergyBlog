@@ -1,202 +1,109 @@
 <?php
-
-// namespace App\Controller;
-
 App::uses('AppController', 'Controller');
+/**
+ * Posts Controller
+ *
+ * @property Post $Post
+ * @property PaginatorComponent $Paginator
+ */
+class PostsController extends AppController {
 
-class PostsController extends AppController
-{
+/**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('Paginator');
 
-	public $components = array('RequestHandler', 'Paginator');
-	public $helpers = array('Html', 'Form');
-	public $name = 'Posts';
-
-	public function beforeFilter(){
-		$this->Auth->allow(array(
-			'blog_news',
-			'blog_timeline',
-			'blog_investment',
-			'blog_analyze',
-			'blog_insurance',
-			'blog_view',
-		));
-	}
-	public $virtualFields = array();
-	public function index(){
-		$posts = $this->Post->find('all');
-		$this->set(array(
-			'posts' => $posts,
-			'_serialize' => array('posts')
-		));
+	public function beforeFilter() {
+		parent::beforeFilter();
+		$this->Auth->allow('index', 'view');
 	}
 
-	public function view(string $uuid){
-		$post = $this->Post->findById($id);
-		$this->set(array(
-			'post' => $post,
-			'_serialize' => array('post')
-		));
+/**
+ * index method
+ *
+ * @return void
+ */
+	public function index() {
+		$this->Post->recursive = 0;
+		$this->set('posts', $this->Paginator->paginate());
 	}
 
-	public function add(){
-		//$this->Post->id = $id;
-		if ($this->Post->save($this->request->data)) {
-			$message = array(
-				'text' => __('Saved'),
-				'type' => 'success'
-			);
-		} else {
-			$message = array(
-				'text' => __('Error'),
-				'type' => 'error'
-			);
+/**
+ * view method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function view($id = null) {
+		if (!$this->Post->exists($id)) {
+			throw new NotFoundException(__('Invalid post'));
 		}
-		$this->set(array(
-			'message' => $message,
-			'_serialize' => array('message')
-		));
+		$options = array('conditions' => array('Post.' . $this->Post->primaryKey => $id));
+		$this->set('post', $this->Post->find('first', $options));
 	}
 
-	public function edit($id){
-		$this->Post->id = $id;
-		if ($this->Post->save($this->request->data)) {
-			$message = array(
-				'text' => __('Saved'),
-				'type' => 'success'
-			);
-		} else {
-			$message = array(
-				'text' => __('Error'),
-				'type' => 'error'
-			);
+/**
+ * add method
+ *
+ * @return void
+ */
+	public function add() {
+		if ($this->request->is('post')) {
+			$this->Post->create();
+			$this->request->data['Post']['user_id'] = $this->Auth->user('id');
+			if ($this->Post->save($this->request->data)) {
+				$this->Session->setFlash(__('The post has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The post could not be saved. Please, try again.'));
+			}
 		}
-		$this->set(array(
-			'message' => $message,
-			'_serialize' => array('message')
-		));
 	}
 
-	public function delete($id)	{
+/**
+ * edit method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function edit($id = null) {
+		if (!$this->Post->exists($id)) {
+			throw new NotFoundException(__('Invalid post'));
+		}
+		if ($this->request->is(array('post', 'put'))) {
+			if ($this->Post->save($this->request->data)) {
+				$this->Session->setFlash(__('The post has been saved.'));
+				return $this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The post could not be saved. Please, try again.'));
+			}
+		} else {
+			$options = array('conditions' => array('Post.' . $this->Post->primaryKey => $id));
+			$this->request->data = $this->Post->find('first', $options);
+		}
+	}
+
+/**
+ * delete method
+ *
+ * @throws NotFoundException
+ * @param string $id
+ * @return void
+ */
+	public function delete($id = null) {
+		if (!$this->Post->exists($id)) {
+			throw new NotFoundException(__('Invalid post'));
+		}
+		$this->request->allowMethod('post', 'delete');
 		if ($this->Post->delete($id)) {
-			$message = array(
-				'text' => __('Deleted'),
-				'type' => 'success'
-			);
+			$this->Session->setFlash(__('The post has been deleted.'));
 		} else {
-			$message = array(
-				'text' => __('Error'),
-				'type' => 'error'
-			);
+			$this->Session->setFlash(__('The post could not be deleted. Please, try again.'));
 		}
-		$this->set(array(
-			'message' => $message,
-			'_serialize' => array('message')
-		));
-	}
-
-	public function admin_home(){
-		$this->layout 	= 'dashboard';
-	}
-
-	public function admin_news(){
-		$this->layout 	= 'dashboard';
-	}
-
-	public function admin_analyzes(){
-		$this->layout 	= 'dashboard';
-	}
-
-
-	public function admin_notification(string $uuid){
-		$this->layout 	= 'dashboard';
-	}
-
-
-	public function admin_message(){
-		$this->layout 	= 'dashboard';
-	}
-
-	public function getPost(){
-		$data = array(
-			"posts" => array(
-				0 => array(
-					'stamp' => '',
-					'title'	=> '',
-					'description' => '',
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'author' => array(
-						'name'	=> '',
-						'uuid'	=> '',
-						'img'	=> '',
-						'description'	=> '',
-					),
-					'likes'	=> 0,
-					'comments'	=> array(
-						'count' => 0,
-					),
-					'created'	=> '',
-					'modified'	=> '',
-				),
-			),
-		);
-
-		$this->set(compact('data'));
-		$this->layout = 'blog';
-	}
-
-	public function blog_news(string $param = null){
-		$this->layout = 'blog';
-		if(empty($param)){
-
-		}
-
-		if($param == 'destaque'){
-
-		}
-
-		if($param == 'editores'){
-
-		}
-		/**
-		 implementar
-		 */
-	}
-
-	public function blog_timeline(){
-		$this->layout = 'blog';
-		/**
-		 implementar
-		 */
-	}
-
-	public function blog_investment(){
-		$this->layout = 'blog';
-		/**
-		 implementar
-		 */
-	}
-
-	public function blog_insurance(){
-		$this->layout = 'blog';
-		/**
-		 implementar
-		 */
-	}
-
-	public function blog_view(string $stamp){
-		$this->layout = 'blog';
-		/**
-		 implementar
-		 */
-	}
-
-	public function blog_analyze(){
-		$this->layout = 'blog';
-		/**
-		 implementar
-		 */
+		return $this->redirect(array('action' => 'index'));
 	}
 }

@@ -160,7 +160,7 @@
  *	`admin_index()` and `/admin/controller/index`
  *	`manager_index()` and `/manager/controller/index`
  */
-	Configure::write('Routing.prefixes', array('admin', 'blog'));
+Configure::write('Routing.prefixes', array('admin'));
 
 /**
  * Turn off all caching application-wide.
@@ -226,30 +226,19 @@
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
  */
-	// Configure::write('Session', array(
-	// 	'defaults' => 'php'
-	// ));
-
 	Configure::write('Session', array(
-		'defaults' => 'cache',
-		'timeout' => 100,
-		'start' => true,
-		'checkAgent' => false,
-		'handler' => array(
-			'config' => 'session'
-		),
-		'server' => 'redis',
+		'defaults' => 'php'
 	));
 
 /**
  * A random string used in security hashing methods.
  */
-	Configure::write('Security.salt', 'DYhG93b0qyAuIxfs2guVoUubWwvniR2G0FgaC9mi');
+	Configure::write('Security.salt', 'AYhG93b0qyJfIxfs2guVoUubFqvniR2G0FgaC9mi');
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
-	Configure::write('Security.cipherSeed', '76859479657453542496749683645');
+	Configure::write('Security.cipherSeed', '76859309657483642496749683645');
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).
@@ -282,14 +271,14 @@
  * The class name and database used in CakePHP's
  * access control lists.
  */
-	Configure::write('Acl.classname', 'PhpAcl');
+	Configure::write('Acl.classname', 'DbAcl');
 	Configure::write('Acl.database', 'default');
 
 /**
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.
  */
-	//date_default_timezone_set('UTC-3');
+	//date_default_timezone_set('UTC');
 
 /**
  * `Config.timezone` is available in which you can set users' timezone string.
@@ -297,7 +286,7 @@
  * then the value of `Config.timezone` will be used. This feature allows you to set users' timezone just
  * once instead of passing it each time in function calls.
  */
-	Configure::write('Config.timezone', 'America/Sao_Paulo');
+	//Configure::write('Config.timezone', 'Europe/Paris');
 
 /**
  * Cache Engine Configuration
@@ -372,8 +361,7 @@
  *       Please check the comments in bootstrap.php for more info on the cache engines available
  *       and their settings.
  */
-$engine = 'Redis';
-$server = 'redis';
+$engine = 'File';
 
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
@@ -393,9 +381,7 @@ Cache::config('_cake_core_', array(
 	'prefix' => $prefix . 'cake_core_',
 	'path' => CACHE . 'persistent' . DS,
 	'serialize' => ($engine === 'File'),
-	'duration' => $duration,
-	'server' => $server,
-	//'port'	=> 6379,
+	'duration' => $duration
 ));
 
 /**
@@ -407,25 +393,5 @@ Cache::config('_cake_model_', array(
 	'prefix' => $prefix . 'cake_model_',
 	'path' => CACHE . 'models' . DS,
 	'serialize' => ($engine === 'File'),
-	'duration' => $duration,
-	'server' => $server,
-	//'port'	=> 6379,
-));
-
-Cache::config('session', array(
-	'engine' => $engine,
-	'prefix' => $prefix . 'cake_session_',
-	'duration' => '+1 days',//$duration,
-	'serialize' => true,
-	'server' => $server,
-	//'port'	=> 6379,
-));
-
-Cache::config('default', array(
-	'engine' => $engine,
-	'prefix' => $prefix . 'cake_',
-	'duration' => '+1 days',
-	'serialize' => true,
-	'server' => $server,
-	//'port'	=> 6379,
+	'duration' => $duration
 ));

@@ -1,44 +1,35 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('AuthComponent', 'Core'); // esta em todas
-App::uses('CakeEvent', 'Event');
-App::uses('Router', 'Core'); // esta em todas
-
-
 /**
- * user Model
+ * User Model
  *
+ * @property Group $Group
+ * @property Post $Post
  */
 class User extends AppModel {
-
-
 	public $name = 'User';
-	public $primaryKey = 'uuid';
 	public $displayField = 'username';
-	public $hasOne = array(
-        'Profile' => array(
-            'className'  => 'Profile',
-			'conditions' => array('Profile.deleted' => null),
-			'foreignKey' => 'users_uuid',
-			'dependent'  => true,
-        )
-	);
+    public $actsAs = array('Acl' => array('type' => 'requester', 'enabled' => false));
 
-	public $belongsTo = array(
-        'Role' => array(
-            'className'  => 'Role',
-			'conditions' => array('Role.deleted' => null),
-			'foreignKey' => 'role_uuid',
-            'dependent'  => true
-        )
-	);
-	public $actAs = array('CrudJson');
-
-	/**
-	 * Validation rules
-	 *
-	 * @var array
-	 */
+    public function parentNode() {
+        if (!$this->id && empty($this->data)) {
+            return null;
+        }
+        if (isset($this->data['User']['group_id'])) {
+            $groupId = $this->data['User']['group_id'];
+        } else {
+            $groupId = $this->field('group_id');
+        }
+        if (!$groupId) {
+            return null;
+        }
+        return array('Group' => array('id' => $groupId));
+    }
+/**
+ * Validation rules
+ *
+ * @var array
+ */
 	public $validate = array(
 		'username' => array(
 			'notBlank' => array(
@@ -61,24 +52,6 @@ class User extends AppModel {
 			'alphaNumericDashUnderscore' => array(
 				'rule' => array('alphaNumericDashUnderscore'),
 				'message' => 'O username só pode conter letras números e/ou sublinhados'
-			),
-		),
-		'email' => array(
-			'required' => array(
-				'rule' => array('email', true),
-				'message' => array('Este endereço de E-mail é inválido'),
-				'allowEmpty' => false,
-				// 'required' => true,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-			'unique' => array(
-				'rule' => 'isUniqueEmail',
-				'message' => 'Este E-mail ja esta em uso'
-			),
-			'between' => array(
-				'rule' => array('between', 6, 60),
-				'message' => 'O e-mail deve conter mais do que 6 caracteres',
 			),
 		),
 		'password' => array(
@@ -111,14 +84,7 @@ class User extends AppModel {
 				'message' => 'A senha esta diferente!'
 			)
 		 ),
-		// 'role_uuid' => array(
-		// 	'valid' => array(
-		// 		'rule' => 'searchRole',
-		// 		'message' => 'Esta regra de usuário é invalida',
-		// 		'allowEmpty' => false
-		// 	)
-		// ),
-		'password_update' => array(
+		 'password_update' => array(
 			'lengthBetween' => array(
 				'rule' => array('lengthBetween', 8, 20),
 				'message' => 'A senha tem que conter entre 8 a 20 caracteres',
@@ -144,17 +110,55 @@ class User extends AppModel {
 				//'on' => 'update', // Limit validation to 'create' or 'update' operations [a-z]+.*[A-Z]+.*[0-9]+.*[!@#$%*()_]+
 			)
 		),
-		'info' => array(
-			'infoJson' => array(
-				'rule' 			=> 'infoJson',
-				'message' 		=> 'Erro em salvar informações no Banco',
-				'required'		=> false,
-				'allowEmpty'	=> true,
-			)
+		'group_id' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
 		),
 	);
 
-	public $virtualFields = array();
+	// The Associations below have been created with all possible keys, those that are not needed can be removed
+
+/**
+ * belongsTo associations
+ *
+ * @var array
+ */
+	public $belongsTo = array(
+		'Group' => array(
+			'className' => 'Group',
+			'foreignKey' => 'group_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
+	);
+
+/**
+ * hasMany associations
+ *
+ * @var array
+ */
+	public $hasMany = array(
+		'Post' => array(
+			'className' => 'Post',
+			'foreignKey' => 'user_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
 
 	/**
 	 * Antes da regra isUniqueUsername
@@ -167,7 +171,7 @@ class User extends AppModel {
 			'first',
 			array(
 				'fields' => array(
-					'User.uuid',
+					'User.id',
 					'User.username'
 				),
 				'conditions' => array(
@@ -177,33 +181,7 @@ class User extends AppModel {
 		);
 
 		if(!empty($username)){
-			return ($this->data[$this->alias]['uuid'] == $username['User']['uuid'])? true:false;
-		}else{
-			return true;
-		}
-	}
-
-
-	/**
-	 * Before isUniqueEmail
-	 * @param array $options
-	 * @return boolean
-	 */
-	public function isUniqueEmail($check) {
-		$email = $this->find(
-			'first',
-			array(
-				'fields' => array(
-					'User.uuid'
-				),
-				'conditions' => array(
-					'User.email' => $check['email']
-				)
-			)
-		);
-
-		if(!empty($email)){
-			return $this->data[$this->alias]['uuid'] == $email['User']['uuid'];
+			return ($this->data[$this->alias]['id'] == $username['User']['id'])? true:false;
 		}else{
 			return true;
 		}
@@ -219,26 +197,6 @@ class User extends AppModel {
 	}
 
 	/**
-	 *  insere uma nova info em JSON
-	 *  @param array $check
-	 *  @return bool
-	 */
-	public function infoJson($check) {
-
-		if(empty($check['info']['data']))
-			return false;
-
-		$conditions = array(
-			'uuid' => $this->data[$this->alias]['uuid'],
-		);
-
-		$conditions = (!empty($check['info']['conditions']))?array_merge($conditions, $check['info']['conditions']):$conditions;
-		$path		= (string) (!empty($check['info']['path']))?$check['info']['path']:$this->pathDotJson($check['info']['data'], gmdate('\TYmdHis'));
-
-		return $this->atualizarJson('users', 'info', $conditions , $path, $check['info']['data']);
-	}
-
-	/**
 	 *  Verifica se o valor passado contem no minimo 1 letra maiuscula e 1 minuscula, 1 número e 1 caractere especial
 	 *  @param array $check
 	 *  @return bool
@@ -246,13 +204,13 @@ class User extends AppModel {
 	public function validatePassword($check){
 		return preg_match('/^(?=.*[a-z])+(?=.*[A-Z])+(?=.*[0-9])+(?=.*[!@#$%\/*()_\/-])+.*/', array_values($check)[0]);
 	}
+
 	/**
 	 * Compara as últimas 5 senhas salvas no BD e caso não tenha uma igual apaga a mais antiga e insere a nova mantendo sempre um total de 5 senhas
 	 * @param array $check 	| [password_update => '']
 	 */
 	public function compareLastFivePassword($check){
-
-		$senhas = (array) $this->query("SELECT info->>'$.lastFivePassword' FROM blog.users WHERE 'uuid' = ".$this->data[$this->uuid]);
+		$senhas = (array) $this->query("SELECT info->>'$.lastFivePassword' FROM blog.users WHERE 'id' = ".$this->data[$this->alias]['id']);
 		//Verifico se entre as ultimas 5 alguma é igual, caso positivo retorno falso
 		foreach ($senhas as $key => $senha){
 			if($senha[$key]['pass'] == $check['password_update']){
@@ -269,36 +227,24 @@ class User extends AppModel {
 		$senhas = (array) array_unshift($senhas, ['pass' => $check['password_update'], 'created' => gmdate('Y-m-d H:i:s')]);
 
 		//salvo no BD
-		return $this->atualizarJson('users', 'info', ["uuid" => $this->data[$this->uuid]], '$.lastFivePassword', $senhas);
+		return $this->atualizarJson('users', 'info', ["id" => $this->data[$this->alias]['id']], '$.lastFivePassword', $senhas);
 	}
 
 
-	public function equaltofield($check,$otherfield) {
+	public function equaltofield($check,$otherfield){
 		//get name of field
 		$fname = '';
 		foreach ($check as $key => $value){
 			$fname = $key;
 			break;
 		}
-		return $this->data[$this->name][$otherfield] === $this->data[$this->name][$fname];
+		return $this->data[$this->alias][$otherfield] === $this->data[$this->alias][$fname];
 	}
 
-
-	// public function searchRole($check){
-	// 	$role = $this->Role->find('first', array(
-	// 		'conditions' => array('Role.uuid =' => $check['role_uuid']),
-	// 	));//("SELECT deleted FROM blog.roles WHERE 'uuid' = ".$check['role_uuid']);
-
-	// 	return (!empty($role['Role']['uuid']))?true:false;
-	// }
-
-	/**
-	 * @param array $options
-	 * @return boolean
-	 */
 	public function beforeSave($options = array()) {
-
-
+        // $this->data['User']['password'] = AuthComponent::password(
+        //   $this->data['User']['password']
+		// );
 		// 1º acesso
 		if (isset($this->data[$this->alias]['password'])) {
 			$crypto = AuthComponent::password($this->data[$this->alias]['password']);
@@ -310,8 +256,13 @@ class User extends AppModel {
 		if (!empty($this->data[$this->alias]['password_update'])) {
 			$this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password_update']);
 		}
-
-		// fallback to our parent
-		return parent::beforeSave($options);
+		parent::beforeSave($options);
+        return true;
 	}
+
+	public function bindNode($user) {
+		return array('model' => 'Group', 'foreign_key' => $user['User']['group_id']);
+	}
+
+
 }

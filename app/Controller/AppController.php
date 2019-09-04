@@ -20,7 +20,6 @@
  */
 
 App::uses('Controller', 'Controller');
-App::uses('JsHelper', 'Controller');
 
 /**
  * Application Controller
@@ -34,194 +33,31 @@ App::uses('JsHelper', 'Controller');
 class AppController extends Controller {
 
 	public $components = array(
-		'Acl',
-		'DebugKit.Toolbar',
-		'Session',
-		'Auth' => array(
-			'authorize'		=> array('Controller'),
-			'loginRedirect' => array('controller' => 'Pages', 'action' => 'admin_home'),
-			'logoutRedirect' => array('controller' => 'Pages', 'action' => 'blog_home'),
-			'authError' => 'Você não tem permissão para acessar essa página',
-			'loginError' => 'Username ou senha estão incorretos'
-		),
-		'Paginator'
-	);
+        'Acl',
+        'Auth' => array(
+            'authorize' => array(
+                'Actions' => array('actionPath' => 'controllers')
+            )
+        ),
+        'Session'
+    );
+    public $helpers = array('Html', 'Form', 'Session');
 
-	public $helpers = array('Html', 'Form', 'Session', 'Js', 'Paginator');
+    public function beforeFilter() {
+		$this->Auth->allow('display');
 
-	public function beforeFilter() {
-		//$this->Auth->allow(array('admin_login', 'blog_home', 'admin_register'));
-		$this->Auth->loginAction = array(
-			'controller' => 'Users',
-			'action' => 'admin_login'
-		);
-		$this->Auth->logoutRedirect = array(
-			//'plugin'	=> 'blog',
-			'controller' => 'Pages',
-			'action' => 'blog_home'
-		);
-		$this->Auth->loginRedirect = array(
-			'controller' => 'Pages',
-			'action' => 'admin_home'
-		);
-
-	}
-
-	public function isAuthorized($user) {
-		// Verifica se o usuário esta ativo
-		if(!empty($user['deleted']) || !$user['status'])
-			$this->redirect(array('controller' => 'Users', 'action' => 'admin_lock', base64_encode($user['email'])));
-
-		$aco = 'controllers/'.$this->params['controller'];
-
-		//Informando qual grupo o usuario pertence
-		$aro = $this->Auth->user('role_uuid');
-
-		//Retornando a validação do privilégio solicitante - recurso/privilegio
-		return $this->Acl->check($aro, $aco, $this->params['action']);
-	}
-
-	public function beforeRender() {
-		parent::beforeRender();
-
-		$redis = new Redis();
-		$redis->connect('redis', 6379);
-
-		if(!empty($this->Auth->user('uuid'))){
-			$admin_data =[
-				'notifications' => [
-					'count'	=> 0,
-					'all' 	=> [
-						[
-							'uuid'	=> null,
-							'type'	=> '',
-							'title'	=> '',
-							'created'	=> '',
-						],
-					],
-				],
-				'messages' => [
-					'count' => 0,
-					'all'	=> [
-						[
-							'uuid'	=> '',
-							'author' => [
-								'uuid'	=> null,
-								'name' 	=> null,
-								'img'	=> null,
-								'msg' 	=> null,
-							],
-							'created' => '',
-						]
-					],
-				],
-				'profile'	=> [
-					'uuid'	=> null,
-					'img'	=> null,
-					'name'	=> null,
-					'first_name'	=> null,
-				],
-			];
-			$redis->set('admin_data', json_encode($admin_data));
-		}else{
-			$blog_data = [
-				'posts'	=> [
-					[
-						'stamp' => '',
-						'title'	=> '',
-						'description' => '',
-						'img' => [
-							'path'  => '',
-							'alt'	=> '',
-						],
-						'author' => [
-							'name'	=> '',
-							'uuid'	=> '',
-							'img'	=> '',
-							'description'	=> '',
-						],
-						'likes'	=> 0,
-						'comments'	=> [
-							'count' => 0,
-						],
-						'created'	=> '',
-						'modified'	=> '',
-					]
-				],
-				'news'	=> [
-					[
-						'stamp' => '',
-						'title'	=> '',
-						'description' => '',
-						'img' => [
-							'path'  => '',
-							'alt'	=> '',
-						],
-						'author' => [
-							'name'	=> '',
-							'uuid'	=> '',
-							'img'	=> '',
-							'description'	=> '',
-						],
-						'likes'	=> 0,
-						'comments'	=> [
-							'count' => 0,
-						],
-						'created'	=> '',
-						'modified'	=> '',
-					]
-				],
-				'money'	=> [
-					'USD' => [
-						'name' => '',
-						'bid' => '',
-					],
-					'EUR' => [
-						'name' => '',
-						'bid' => '',
-					],
-					'BTC' => [
-						'name' => '',
-						'bid' => '',
-					],
-					'LTC' => [
-						'name' => '',
-						'bid' => '',
-					],
-					'JPY' => [
-						'name' => '',
-						'bid' => '',
-					],
-					'CNY' => [
-						'name' => '',
-						'bid' => '',
-					],
-				],
-				'postPop' => [
-					[
-						'stamp' => '',
-						'title'	=> '',
-						'description' => '',
-						'img' => [
-							'path'  => '',
-							'alt'	=> '',
-						],
-						'author' => [
-							'name'	=> '',
-							'uuid'	=> '',
-							'img'	=> '',
-							'description'	=> '',
-						],
-						'likes'	=> 0,
-						'comments'	=> [
-							'count' => 0,
-						],
-						'created'	=> '',
-						'modified'	=> '',
-					]
-				],
-			];
-			$redis->set('blog_data', json_encode($blog_data));
-		}
+        //Configure AuthComponent
+        $this->Auth->loginAction = array(
+          'controller' => 'users',
+          'action' => 'login'
+        );
+        $this->Auth->logoutRedirect = array(
+          'controller' => 'users',
+          'action' => 'login'
+        );
+        $this->Auth->loginRedirect = array(
+          'controller' => 'posts',
+          'action' => 'add'
+        );
     }
 }

@@ -30,11 +30,6 @@ App::uses('Model', 'Model');
  * @package       app.Model
  */
 class AppModel extends Model {
-
-	public $recursive = -1;
-	public $actsAs = array('Containable');
-
-
 	/**
 	 * Verifica se o caminho Json existe na tabela.
 	 * @param string $Tb
@@ -97,7 +92,7 @@ class AppModel extends Model {
 		if($this->salvarRotaJson($Tb, $collumn, $where, $path)){
 			$data 		= (is_string($data) || is_int($data))? $this->utf8_ansi($data): "CAST('".$this->utf8_ansi(json_encode($data))."' AS JSON)";
 			$sql     	= (string) "JSON_UNQUOTE(JSON_SET(".$collumn.", '".$path."', $data))";
-			$up		 	= $this->query('update '.$Tb.' set '.$collumn.' = '.$sql.', modified = '.gmdate('Y-m-d H:i:s').' where '.$whereString);
+			$up		 	= $this->query('update '.$Tb.' set '.$collumn.' = '.$sql.', modified = "'.gmdate('Y-m-d H:i:s').'" where '.$whereString);
 
 			return $up == 1;
 		}
@@ -134,8 +129,6 @@ class AppModel extends Model {
 	//Se existir
 		if($pathValido){
 			if($countLocal == 0 || $countLocal == $countOrigem){
-				debug('chegou aqui');
-				exit;
 				return true;
 			}else{
 				$pathLocal .= '.'.$vetorOrigem[$countLocal];

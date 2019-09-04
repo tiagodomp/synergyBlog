@@ -62,10 +62,12 @@ Cache::config('default', array('engine' => 'File'));
  * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
  * Uncomment one of the lines below, as you need. Make sure you read the documentation on CakePlugin to use more
  * advanced ways of loading plugins
+ *
+ * CakePlugin::loadAll(); // Loads all plugins at once
+ * CakePlugin::load('DebugKit'); // Loads a single plugin named DebugKit
  */
-	// CakePlugin::load('DebugKit', array('bootstrap' => true, 'routes' => true)); // Loads a single plugin named DebugKit
-	//CakePlugin::path('Plugin/Migrations'); // Loads a single plugin named DebugKit
-	CakePlugin::loadAll(); // Loads all plugins at once
+
+CakePlugin::loadAll(); // Loads all plugins at once
 
 /**
  * To prefer app translation over plugin translation, you can set
@@ -99,7 +101,6 @@ Configure::write('Dispatcher.filters', array(
  * Configures default file logging options
  */
 App::uses('CakeLog', 'Log');
-
 CakeLog::config('debug', array(
 	'engine' => 'File',
 	'types' => array('notice', 'info', 'debug'),

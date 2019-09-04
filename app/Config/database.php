@@ -68,23 +68,23 @@ class DATABASE_CONFIG {
 
 	public $default = array(
 		'datasource' => 'Database/Mysql',
-		'persistent' => false,
-		'host' => 'mysql',
+		'persistent' => true,
+		'host' => '127.0.0.1',
 		'login' => 'root',
-		'password' => 'secret',
+		'password' => '12345',
 		'database' => 'blog',
 		'prefix' => '',
-		'encoding' => 'utf8',
+		'encoding' => 'utf8mb4',
 	);
 
 	public $test = array(
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
-		'host' => 'mysql',
+		'host' => '127.0.0.1',
 		'login' => 'root',
-		'password' => 'secret',
-		'database' => 'blogteste',
+		'password' => '12345',
+		'database' => 'blog_teste',
 		'prefix' => '',
-		'encoding' => 'utf8',
+		'encoding' => 'utf8mb4',
 	);
 }
