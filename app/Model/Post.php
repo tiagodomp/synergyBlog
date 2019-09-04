@@ -26,16 +26,21 @@ class Post extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'title' => array(
-			'notBlank' => array(
-				'rule' => array('notBlank'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+		'body' => array(
+			// 'notBlank' => array(
+			// 	'rule' => array('notBlank'),
+			// 	'message' => 'não é possivel salvar um Post em branco',
+			// 	//'allowEmpty' => true,
+			// 	//'required' => false,
+			// 	//'last' => false, // Stop validation after this rule
+			// 	//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			// ),
+			'validateBody' => array(
+				'rule' => array('validateBody'),
+				'message' => 'Tipo de POST inválido'
 			),
 		),
+
 	);
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -54,4 +59,10 @@ class Post extends AppModel {
 			'order' => ''
 		)
 	);
+
+	public function validateBody($check){
+
+		//salvo no BD
+		return $this->atualizarJson('posts', 'body', ["user_id" => $this->data[$this->alias]['user_id']], '$.body', [$check['body']]);
+	}
 }

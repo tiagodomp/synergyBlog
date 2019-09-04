@@ -25,20 +25,25 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 		<?php echo $cakeDescription ?>:
 		<?php echo $this->fetch('title'); ?>
 	</title>
-  	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+	  	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 	<?php
 		echo $this->Html->meta('icon');
 
 		echo $this->Html->css('cake.generic');
+		echo $this->Html->css('amsify.suggestags');
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
-
+<!--
 	<script src="//code.jquery.com/jquery-1.12.4.js"></script>
-  	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
 </head>
 <body>
 	<div id="container">
@@ -58,11 +63,7 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 					array('target' => '_blank', 'escape' => false, 'id' => 'cake-powered')
 				);
 			?>
-			<p>
-				<?php echo $cakeVersion; ?>
-			</p>
 		</div>
 	</div>
-	<?php echo $this->element('sql_dump'); ?>
 </body>
 </html>

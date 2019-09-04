@@ -1,5 +1,5 @@
 <div class="posts index">
-	<h2><?php echo __('Posts'); ?></h2>
+	<h2><?php  echo __('Posts'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<thead>
 	<tr>
@@ -13,18 +13,19 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($posts as $post): ?>
+	<?php foreach ($posts as $data): ?>
+	<?php $post['Post']['body'] = json_decode($post['Post']['body'], true )?:[]; ?>
 	<tr>
 		<td><?php echo h($post['Post']['id']); ?>&nbsp;</td>
 		<td><?php echo h($post['Post']['user_id']); ?>&nbsp;</td>
-		<td><?php echo h($post['Post']['title']); ?>&nbsp;</td>
-		<td><?php echo h($post['Post']['body']); ?>&nbsp;</td>
-		<td><?php echo h($post['Post']['created']); ?>&nbsp;</td>
-		<td><?php echo h($post['Post']['modified']); ?>&nbsp;</td>
+		<td><?php echo h($post['Post']['body']['title']); ?>&nbsp;</td>
+		<td><?php echo h($post['Post']['body']['content']); ?>&nbsp;</td>
+		<td><?php echo h($post['Post']['body']['created']); ?>&nbsp;</td>
+		<td><?php echo h($post['Post']['body']['modified']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $post['Post']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $post['Post']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $post['Post']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $post['Post']['id']))); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $post['Post']['body']['stamp'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $post['Post']['body']['stamp'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $post['Post']['body']['stamp']), array('confirm' => __('Are you sure you want to delete # %s?', $post['Post']['body']['stamp']))); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

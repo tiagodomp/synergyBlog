@@ -90,6 +90,7 @@ class AppModel extends Model {
 	{
 		$whereString = $this->geradorWhereString($where)[0];
 		if($this->salvarRotaJson($Tb, $collumn, $where, $path)){
+			exit;
 			$data 		= (is_string($data) || is_int($data))? $this->utf8_ansi($data): "CAST('".$this->utf8_ansi(json_encode($data))."' AS JSON)";
 			$sql     	= (string) "JSON_UNQUOTE(JSON_SET(".$collumn.", '".$path."', $data))";
 			$up		 	= $this->query('update '.$Tb.' set '.$collumn.' = '.$sql.', modified = "'.gmdate('Y-m-d H:i:s').'" where '.$whereString);

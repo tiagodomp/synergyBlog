@@ -15,6 +15,8 @@ class PostsController extends AppController {
  */
 	public $components = array('Paginator');
 
+	public $uses = array('Tag', 'Post');
+
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow('index', 'view');
@@ -26,8 +28,8 @@ class PostsController extends AppController {
  * @return void
  */
 	public function index() {
-		$this->Post->recursive = 0;
-		$this->set('posts', $this->Paginator->paginate());
+		$posts = $this->Post->find('all');
+		$this->set('posts', $posts);
 	}
 
 /**
@@ -52,15 +54,47 @@ class PostsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
+			$data['Post']['user_id'] = $this->Auth->user('id');
+
+			$data['Post']['body'] = array(
+					'stamp' => gmdate('\TYmdHis'),
+					'title'	=> $this->request->data['Post']['title'],
+					'description' => $this->request->data['Post']['description'],
+					'img' => array(
+						'path'  => '',
+						'alt'	=> '',
+					),
+					'content'	=> $this->request->data['Post']['body']?:[],
+					'author' => array(
+						'username'	=> $this->Auth->user('username'),
+						'id'	=> $this->Auth->user('id'),
+					),
+					'likes'	=> 0,
+					'comments'	=> array(
+						'count' => 0,
+						'msg'	=> array(),
+					),
+					'tags' => array($this->request->data['Post']['tags']?:''),
+					'created'	=> gmdate('Y-m-d H:i:s'),
+					'modified'	=> '',
+				);
 			$this->Post->create();
-			$this->request->data['Post']['user_id'] = $this->Auth->user('id');
-			if ($this->Post->save($this->request->data)) {
+			if ($this->Post->save($data)) {
 				$this->Session->setFlash(__('The post has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The post could not be saved. Please, try again.'));
 			}
 		}
+		$tags = $this->Tag->find('list', array(
+			'conditions' => array('Tag.deleted IS NULL'),
+			'fields' => array('Tag.name'),
+		));
+
+		//$tags = array_keys($tags);
+
+
+		$this->set('tags', $tags);
 	}
 
 /**

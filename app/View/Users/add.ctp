@@ -22,9 +22,3 @@
 		<li><?php echo $this->Html->link(__('New Post'), array('controller' => 'posts', 'action' => 'add')); ?> </li>
 	</ul>
 </div>
-
-<div id="draggable">Drag me</div>
-
-<script>
-$( "#draggable" ).draggable();
-</script>
