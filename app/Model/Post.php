@@ -4,11 +4,10 @@ App::uses('AppModel', 'Model');
  * Post Model
  *
  * @property User $User
+ * @property Comment $Comment
+ * @property Tag $Tag
  */
 class Post extends AppModel {
-
-
-	public $displayField = 'title';
 
 /**
  * Validation rules
@@ -26,22 +25,9 @@ class Post extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'body' => array(
-			// 'notBlank' => array(
-			// 	'rule' => array('notBlank'),
-			// 	'message' => 'não é possivel salvar um Post em branco',
-			// 	//'allowEmpty' => true,
-			// 	//'required' => false,
-			// 	//'last' => false, // Stop validation after this rule
-			// 	//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			// ),
-			'validateBody' => array(
-				'rule' => array('validateBody'),
-				'message' => 'Tipo de POST inválido'
-			),
-		),
-
 	);
+
+	public $uses = array('Tag');
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -57,12 +43,39 @@ class Post extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Comment' => array(
+			'className' => 'Comment',
+			'foreignKey' => 'comment_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Tag' => array(
+			'className' => 'Tag',
+			'foreignKey' => 'tag_id',
+			'conditions' => '',
+			'fields' => array('id', 'name'),
+			'order' => ''
 		)
 	);
 
-	public function validateBody($check){
+	public function afterFind($results, $primary = false){
+		parent::afterFind($results, $primary);
+		foreach ($results as &$val) {
+			if(isset($val['Post']['tag_id']) && isset($val['Tag'])){
+				$val['Tag'] = [];
+				$tagsArray = json_decode($val['Post']['tag_id'], true)?:[];
+				foreach($tagsArray as $tag_id){
+					$val['Tag'][] = $this->Tag->find('list', array(
+									'conditions' => array('id' => $tag_id)
+								),
+							);
+				}
+			}
+		}
+		return $results;
 
-		//salvo no BD
-		return $this->atualizarJson('posts', 'body', ["user_id" => $this->data[$this->alias]['user_id']], '$.body', [$check['body']]);
+
 	}
 }

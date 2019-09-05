@@ -15,12 +15,7 @@ class PostsController extends AppController {
  */
 	public $components = array('Paginator');
 
-	public $uses = array('Tag', 'Post');
-
-	public function beforeFilter() {
-		parent::beforeFilter();
-		$this->Auth->allow('index', 'view');
-	}
+	public $uses = array('Post','Tag', 'Comment');
 
 /**
  * index method
@@ -28,8 +23,8 @@ class PostsController extends AppController {
  * @return void
  */
 	public function index() {
-		$posts = $this->Post->find('all');
-		$this->set('posts', $posts);
+		$this->Post->recursive = 0;
+		$this->set('posts', $this->Paginator->paginate());
 	}
 
 /**
@@ -54,47 +49,19 @@ class PostsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$data['Post']['user_id'] = $this->Auth->user('id');
-
-			$data['Post']['body'] = array(
-					'stamp' => gmdate('\TYmdHis'),
-					'title'	=> $this->request->data['Post']['title'],
-					'description' => $this->request->data['Post']['description'],
-					'img' => array(
-						'path'  => '',
-						'alt'	=> '',
-					),
-					'content'	=> $this->request->data['Post']['body']?:[],
-					'author' => array(
-						'username'	=> $this->Auth->user('username'),
-						'id'	=> $this->Auth->user('id'),
-					),
-					'likes'	=> 0,
-					'comments'	=> array(
-						'count' => 0,
-						'msg'	=> array(),
-					),
-					'tags' => array($this->request->data['Post']['tags']?:''),
-					'created'	=> gmdate('Y-m-d H:i:s'),
-					'modified'	=> '',
-				);
 			$this->Post->create();
-			if ($this->Post->save($data)) {
+			$this->request->data['Post']['user_id'] = $this->Auth->user('id');
+			$this->request->data['Post']['info'] = json_encode(['status' => false]);
+			$this->request->data['Post']['tag_id'] = json_encode(explode(',', $this->request->data['Post']['tags']));
+			if ($this->Post->save($this->request->data)) {
 				$this->Session->setFlash(__('The post has been saved.'));
 				return $this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The post could not be saved. Please, try again.'));
+				$this->Flash->error(__('The post could not be saved. Please, try again.'));
 			}
 		}
-		$tags = $this->Tag->find('list', array(
-			'conditions' => array('Tag.deleted IS NULL'),
-			'fields' => array('Tag.name'),
-		));
-
-		//$tags = array_keys($tags);
-
-
-		$this->set('tags', $tags);
+		$tags = $this->Post->Tag->find('list');
+		$this->set(compact('tags'));
 	}
 
 /**
@@ -109,6 +76,9 @@ class PostsController extends AppController {
 			throw new NotFoundException(__('Invalid post'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
+			$this->request->data['Post']['user_id'] = $this->Auth->user('id');
+			$this->request->data['Post']['info'] = json_encode(['status' => false, $this->request->data['Post']['status']]);
+			$this->request->data['Post']['tag_id'] = json_encode(explode(',', $this->request->data['Post']['tags']));
 			if ($this->Post->save($this->request->data)) {
 				$this->Session->setFlash(__('The post has been saved.'));
 				return $this->redirect(array('action' => 'index'));
@@ -117,7 +87,10 @@ class PostsController extends AppController {
 			}
 		} else {
 			$options = array('conditions' => array('Post.' . $this->Post->primaryKey => $id));
-			$this->request->data = $this->Post->find('first', $options);
+			$post = $this->Post->find('first', $options);
+			$this->request->data = $post;
+			$tags = $this->Post->Tag->find('list');
+			$this->set(compact('tags'));
 		}
 	}
 

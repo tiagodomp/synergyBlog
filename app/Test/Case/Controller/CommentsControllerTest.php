@@ -1,10 +1,10 @@
 <?php
-App::uses('PostsController', 'Controller');
+App::uses('CommentsController', 'Controller');
 
 /**
- * PostsController Test Case
+ * CommentsController Test Case
  */
-class PostsControllerTest extends ControllerTestCase {
+class CommentsControllerTest extends ControllerTestCase {
 
 /**
  * Fixtures
@@ -12,9 +12,11 @@ class PostsControllerTest extends ControllerTestCase {
  * @var array
  */
 	public $fixtures = array(
+		'app.comment',
 		'app.post',
 		'app.user',
-		'app.group'
+		'app.group',
+		'app.tag'
 	);
 
 /**

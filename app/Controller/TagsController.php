@@ -14,6 +14,7 @@ class TagsController extends AppController {
  * @var array
  */
 	public $components = array('Paginator');
+	public $displayFields = 'name';
 
 /**
  * index method
@@ -72,7 +73,6 @@ class TagsController extends AppController {
 			throw new NotFoundException(__('Invalid tag'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
-			$this->request->data['Tag']['user_id'] = $this->Auth->user('id');
 			if ($this->Tag->save($this->request->data)) {
 				$this->Session->setFlash(__('The tag has been saved.'));
 				return $this->redirect(array('action' => 'index'));

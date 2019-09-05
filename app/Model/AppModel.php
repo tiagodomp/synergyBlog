@@ -126,7 +126,6 @@ class AppModel extends Model {
 
 		//Verifico se este caminho json existe no BD
 		$pathValido = $this->validarPathJson($Tb, $where, $collumn, $path);
-
 	//Se existir
 		if($pathValido){
 			if($countLocal == 0 || $countLocal == $countOrigem){
@@ -184,7 +183,11 @@ class AppModel extends Model {
 		$where = $this->array_divide($where);
 		$whereString = '';
 		foreach($where[0] as $key=>$value){
-			$whereString = ($valueInArray)?$value." = '".$where[1][$key]. "'": $value. ' = ?';
+			if(is_int($value)){
+				$whereString = $where[1][$key];
+			}else{
+				$whereString = ($valueInArray)?$value." = '".$where[1][$key]. "'": $value. ' = ?';
+			}
 		}
 		return [$whereString, $where[1]];
 	}

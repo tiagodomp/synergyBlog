@@ -3,7 +3,6 @@
 	<fieldset>
 		<legend><?php echo __('Edit User'); ?></legend>
 	<?php
-		echo $this->Form->input('id');
 		echo $this->Form->input('username');
 		echo $this->Form->input('password_update', array('required' => false));
 		echo $this->Form->input('password_confirm_update', array('type' => 'password'));

@@ -24,7 +24,10 @@ class User extends AppModel {
             return null;
         }
         return array('Group' => array('id' => $groupId));
-    }
+	}
+	public $virtualFields = array(
+		"status" => "JSON_EXTRACT(User.info, "."'$.status'".")",
+	);
 /**
  * Validation rules
  *
@@ -106,6 +109,7 @@ class User extends AppModel {
 			'equaltofield' => array(
 				'rule' => array('equaltofield', 'password_update'),
 				'message' => 'A senha esta diferente!',
+				'allowEmpty' => true,
 				'required' => false,
 				//'on' => 'update', // Limit validation to 'create' or 'update' operations [a-z]+.*[A-Z]+.*[0-9]+.*[!@#$%*()_]+
 			)
@@ -118,6 +122,12 @@ class User extends AppModel {
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'status' => array(
+			'setStatus' => array(
+				'rule'	=> array('setStatus'),
+				'message' => 'Status de usuário inválido!'
 			),
 		),
 	);
@@ -210,7 +220,7 @@ class User extends AppModel {
 	 * @param array $check 	| [password_update => '']
 	 */
 	public function compareLastFivePassword($check){
-		$senhas = (array) $this->query("SELECT info->>'$.lastFivePassword' FROM blog.users WHERE 'id' = ".$this->data[$this->alias]['id']);
+		$senhas = (array) $this->query("SELECT info->>'$.lastFivePassword' FROM blog.users WHERE username LIKE "."'".$this->data[$this->alias]['username']."'");
 		//Verifico se entre as ultimas 5 alguma é igual, caso positivo retorno falso
 		foreach ($senhas as $key => $senha){
 			if($senha[$key]['pass'] == $check['password_update']){
@@ -224,10 +234,10 @@ class User extends AppModel {
 		}
 
 		//insiro no inicio a nova senha
-		$senhas = (array) array_unshift($senhas, ['pass' => $check['password_update'], 'created' => gmdate('Y-m-d H:i:s')]);
+		$senhas = array_unshift($senhas, ['pass' => $check['password_update'], 'created' => gmdate('Y-m-d H:i:s')]);
 
 		//salvo no BD
-		return $this->atualizarJson('users', 'info', ["id" => $this->data[$this->alias]['id']], '$.lastFivePassword', $senhas);
+		return $this->atualizarJson('users', 'info', ["username LIKE '".$this->data[$this->alias]['username']."'"], '$.lastFivePassword', $senhas);
 	}
 
 
@@ -240,6 +250,16 @@ class User extends AppModel {
 		}
 		return $this->data[$this->alias][$otherfield] === $this->data[$this->alias][$fname];
 	}
+	/**
+	 * Compara as últimas 5 senhas salvas no BD e caso não tenha uma igual apaga a mais antiga e insere a nova mantendo sempre um total de 5 senhas
+	 * @param array $check 	| [password_update => '']
+	 */
+	public function setStatus($check){
+		//salvo no BD
+		return $this->atualizarJson('users', 'info', ["username LIKE '".$this->data[$this->alias]['username']."'"], '$.status', $check['status']);
+	}
+
+
 
 	public function beforeSave($options = array()) {
         // $this->data['User']['password'] = AuthComponent::password(
